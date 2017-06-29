@@ -21,6 +21,7 @@ package org.omnaest.metabolics.iuphar.wrapper.domain;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.omnaest.metabolics.iuphar.domain.Comments;
 import org.omnaest.metabolics.iuphar.domain.DatabaseLinks;
 import org.omnaest.metabolics.iuphar.domain.Functions;
 import org.omnaest.metabolics.iuphar.domain.InteractionsShort;
@@ -40,6 +41,7 @@ public class IUPHARModel
 
 	private Map<Long, Synonyms>			ligandIdToSynonymsMap		= new ConcurrentHashMap<>();
 	private Map<Long, DatabaseLinks>	ligandIdToDatabaseLinksMap	= new ConcurrentHashMap<>();
+	private Map<Long, Comments>			ligandIdToCommentsMap		= new ConcurrentHashMap<>();
 
 	public IUPHARModel()
 	{
@@ -92,6 +94,11 @@ public class IUPHARModel
 	public Map<Long, DatabaseLinks> getLigandIdToDatabaseLinksMap()
 	{
 		return this.ligandIdToDatabaseLinksMap;
+	}
+
+	public Map<Long, Comments> getLigandIdToCommentsMap()
+	{
+		return this.ligandIdToCommentsMap;
 	}
 
 }

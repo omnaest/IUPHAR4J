@@ -82,6 +82,15 @@ public class IUPHARUtils
 													.collect(Collectors.toMap(	ligandIdAndValue -> ligandIdAndValue.getId(),
 																				ligandIdAndValue -> ligandIdAndValue.getValue())));
 
+					this.iupharModel.getLigandIdToCommentsMap()
+									.putAll(ligands	.stream()
+													.map(ligand -> ligand.getLigandId())
+													.map(ligandId -> new IdAndFutureValue<>(ligandId,
+																							executorService.submit(() -> IUPHARRestApiUtils.getLigandComments(ligandId))))
+													.filter(ligandIdAndValue -> ligandIdAndValue.getValue() != null)
+													.collect(Collectors.toMap(	ligandIdAndValue -> ligandIdAndValue.getId(),
+																				ligandIdAndValue -> ligandIdAndValue.getValue())));
+
 					this.iupharModel.getLigandIdToDatabaseLinksMap()
 									.putAll(ligands	.stream()
 													.map(ligand -> ligand.getLigandId())
@@ -161,6 +170,7 @@ public class IUPHARUtils
 					{
 						InteractionsWithTargets interactionsWithTargets = new InteractionsWithTargets(iupharModel	.getInteractions()
 																													.stream()
+																													.filter(interaction -> ligand != null)
 																													.filter(interaction -> ObjectUtils.equals(	interaction.getLigandId(),
 																																								ligand.getLigandId()))
 																													.map(interaction -> new InteractionWithTarget(	interaction,
@@ -222,7 +232,7 @@ public class IUPHARUtils
 																							.anyMatch(synonym -> StringUtils.equalsIgnoreCase(	synonym.getName(),
 																																				metabolite)))
 																.findFirst()
-																.get());
+																.orElseGet(() -> null));
 			}
 
 			@Override
@@ -252,7 +262,9 @@ public class IUPHARUtils
 																												.filter(interaction -> ObjectUtils.equals(	interaction.getTargetId(),
 																																							target.getTargetId()))
 																												.map(interaction -> new InteractionWithLigand(	interaction,
-																																								findLigand(interaction.getLigandId()).get()))
+																																								findLigand(interaction.getLigandId()).get(),
+																																								iupharModel	.getLigandIdToCommentsMap()
+																																											.get(interaction.getLigandId())))
 																												.collect(Collectors.toList())));
 					}
 

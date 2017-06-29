@@ -18,6 +18,7 @@
 */
 package org.omnaest.metabolics.iuphar.wrapper.domain;
 
+import org.omnaest.metabolics.iuphar.domain.Comments;
 import org.omnaest.metabolics.iuphar.domain.InteractionShort;
 import org.omnaest.metabolics.iuphar.domain.Ligand;
 
@@ -25,12 +26,14 @@ public class InteractionWithLigand
 {
 	private InteractionShort	interaction;
 	private Ligand				ligand;
+	private Comments			comments;
 
-	public InteractionWithLigand(InteractionShort interaction, Ligand ligand)
+	public InteractionWithLigand(InteractionShort interaction, Ligand ligand, Comments comments)
 	{
 		super();
 		this.interaction = interaction;
 		this.ligand = ligand;
+		this.comments = comments;
 	}
 
 	public InteractionShort getInteraction()
@@ -41,6 +44,11 @@ public class InteractionWithLigand
 	public Ligand getLigand()
 	{
 		return this.ligand;
+	}
+
+	public Comments getComments()
+	{
+		return this.comments;
 	}
 
 }

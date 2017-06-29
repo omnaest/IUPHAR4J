@@ -18,6 +18,7 @@
 */
 package org.omnaest.metabolics.iuphar;
 
+import org.omnaest.metabolics.iuphar.domain.Comments;
 import org.omnaest.metabolics.iuphar.domain.DatabaseLinks;
 import org.omnaest.metabolics.iuphar.domain.Functions;
 import org.omnaest.metabolics.iuphar.domain.Interactions;
@@ -81,5 +82,10 @@ public class IUPHARRestApiUtils
 	public static Ligands getLigands()
 	{
 		return JSONHelper.readFromString(RestHelper.requestGet(BASE_URL + "/ligands"), Ligands.class);
+	}
+
+	public static Comments getLigandComments(Long ligandId)
+	{
+		return JSONHelper.readFromString(RestHelper.requestGet(BASE_URL + "/ligands/" + ligandId + "/comments"), Comments.class);
 	}
 }

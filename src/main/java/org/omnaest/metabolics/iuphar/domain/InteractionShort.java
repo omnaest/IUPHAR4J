@@ -20,6 +20,8 @@ package org.omnaest.metabolics.iuphar.domain;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 public class InteractionShort
 {
 	private Long		targetId;
@@ -153,6 +155,26 @@ public class InteractionShort
 	public void setDataPointInteractionIds(List<Long> dataPointInteractionIds)
 	{
 		this.dataPointInteractionIds = dataPointInteractionIds;
+	}
+
+	public static enum TargetSpecies
+	{
+		Human
+	}
+
+	public boolean hasTargetSpecies(TargetSpecies targetSpecies)
+	{
+		return StringUtils.equalsIgnoreCase(this.targetSpecies, targetSpecies.name());
+	}
+
+	public static enum Type
+	{
+		Agonist, Antagonist
+	}
+
+	public boolean isType(Type type)
+	{
+		return StringUtils.equalsIgnoreCase(type.name(), this.type);
 	}
 
 }
