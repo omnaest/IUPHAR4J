@@ -29,62 +29,62 @@ import org.omnaest.metabolics.iuphar.wrapper.IUPHARModelManagerLoader;
 public class IUPHARUtilsTest
 {
 
-	private File file = new File("data/model.json");
+    private File file = new File("data/model.json");
 
-	@Test
-	@Ignore
-	public void testGetInstanceFromRestApi() throws Exception
-	{
-		IUPHARModelManagerLoader modelManager = IUPHARUtils.getInstance();
+    @Test
+    @Ignore
+    public void testGetInstanceFromRestApi() throws Exception
+    {
+        IUPHARModelManagerLoader modelManager = IUPHARUtils.getInstance();
 
-		modelManager.loadFromRestApi()
-					.saveToFile(this.file);
+        modelManager.loadFromRestApi()
+                    .saveToFile(this.file);
 
-	}
+    }
 
-	@Test
-	//@Ignore
-	public void testGetInstanceFromFile() throws Exception
-	{
-		IUPHARModelManager modelManager = IUPHARUtils	.getInstance()
-														.loadFromFile(this.file);
-		//		System.out.println(modelManager	.findLigand("olanzapine")
-		//										.findTargets()
-		//										.get());
+    @Test
+    @Ignore
+    public void testGetInstanceFromFile() throws Exception
+    {
+        IUPHARModelManager modelManager = IUPHARUtils.getInstance()
+                                                     .loadFromFile(this.file);
+        //		System.out.println(modelManager	.findLigand("olanzapine")
+        //										.findTargets()
+        //										.get());
 
-		modelManager.findLigandForMetabolite("adrenaline")
-					.findTargets()
-					.get()
-					.stream()
-					.map(interactionWithTarget -> interactionWithTarget	.getTarget()
-																		.getName())
-					.forEach(this.listTargetAndItsLigands(modelManager));
+        modelManager.findLigandForMetabolite("adrenaline")
+                    .findTargets()
+                    .get()
+                    .stream()
+                    .map(interactionWithTarget -> interactionWithTarget.getTarget()
+                                                                       .getName())
+                    .forEach(this.listTargetAndItsLigands(modelManager));
 
-	}
+    }
 
-	private Consumer<? super String> listTargetAndItsLigands(IUPHARModelManager modelManager)
-	{
-		return targetName ->
-		{
-			System.out.println(targetName);
+    private Consumer<? super String> listTargetAndItsLigands(IUPHARModelManager modelManager)
+    {
+        return targetName ->
+        {
+            System.out.println(targetName);
 
-			modelManager.findTargetByName(targetName)
-						.findLigands()
-						.get()
-						.stream()
-						.sorted((i1, i2) -> i1	.getInteraction()
-												.getAffinity()
-												.compareTo(i2	.getInteraction()
-																.getAffinity()))
-						.forEach(interactionWithLigand -> System.out.println("  <-" + interactionWithLigand	.getLigand()
-																											.getName()
-								+ "(" + interactionWithLigand	.getInteraction()
-																.getAffinity()
-								+ " " + interactionWithLigand	.getInteraction()
-																.getAffinityType()
-								+ ")"));
+            modelManager.findTargetByName(targetName)
+                        .findLigands()
+                        .get()
+                        .stream()
+                        .sorted((i1, i2) -> i1.getInteraction()
+                                              .getAffinity()
+                                              .compareTo(i2.getInteraction()
+                                                           .getAffinity()))
+                        .forEach(interactionWithLigand -> System.out.println("  <-" + interactionWithLigand.getLigand()
+                                                                                                           .getName()
+                                + "(" + interactionWithLigand.getInteraction()
+                                                             .getAffinity()
+                                + " " + interactionWithLigand.getInteraction()
+                                                             .getAffinityType()
+                                + ")"));
 
-		};
-	}
+        };
+    }
 
 }
