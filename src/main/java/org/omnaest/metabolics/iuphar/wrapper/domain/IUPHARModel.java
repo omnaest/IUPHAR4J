@@ -24,81 +24,95 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.omnaest.metabolics.iuphar.domain.Comments;
 import org.omnaest.metabolics.iuphar.domain.DatabaseLinks;
 import org.omnaest.metabolics.iuphar.domain.Functions;
+import org.omnaest.metabolics.iuphar.domain.GeneProteinInformations;
 import org.omnaest.metabolics.iuphar.domain.InteractionsShort;
 import org.omnaest.metabolics.iuphar.domain.Ligands;
 import org.omnaest.metabolics.iuphar.domain.Synonyms;
 import org.omnaest.metabolics.iuphar.domain.Targets;
+import org.omnaest.metabolics.iuphar.utils.JSONHelper;
 
 public class IUPHARModel
 {
-	private Ligands				ligands;
-	private Targets				targets;
-	private InteractionsShort	interactions;
+    private Ligands           ligands;
+    private Targets           targets;
+    private InteractionsShort interactions;
 
-	private Map<Long, Functions>		targetIdToFunctionsMap		= new ConcurrentHashMap<>();
-	private Map<Long, Synonyms>			targetIdToSynonymsMap		= new ConcurrentHashMap<>();
-	private Map<Long, DatabaseLinks>	targetIdToDatabaseLinksMap	= new ConcurrentHashMap<>();
+    private Map<Long, Functions>               targetIdToFunctionsMap              = new ConcurrentHashMap<>();
+    private Map<Long, Synonyms>                targetIdToSynonymsMap               = new ConcurrentHashMap<>();
+    private Map<Long, DatabaseLinks>           targetIdToDatabaseLinksMap          = new ConcurrentHashMap<>();
+    private Map<Long, GeneProteinInformations> targetIdToGeneProteinInformationMap = new ConcurrentHashMap<>();
 
-	private Map<Long, Synonyms>			ligandIdToSynonymsMap		= new ConcurrentHashMap<>();
-	private Map<Long, DatabaseLinks>	ligandIdToDatabaseLinksMap	= new ConcurrentHashMap<>();
-	private Map<Long, Comments>			ligandIdToCommentsMap		= new ConcurrentHashMap<>();
+    private Map<Long, Synonyms>      ligandIdToSynonymsMap      = new ConcurrentHashMap<>();
+    private Map<Long, DatabaseLinks> ligandIdToDatabaseLinksMap = new ConcurrentHashMap<>();
+    private Map<Long, Comments>      ligandIdToCommentsMap      = new ConcurrentHashMap<>();
 
-	public IUPHARModel()
-	{
-		super();
-	}
+    public IUPHARModel()
+    {
+        super();
+    }
 
-	public IUPHARModel(Ligands ligands, Targets targets, InteractionsShort interactions)
-	{
-		super();
-		this.ligands = ligands;
-		this.targets = targets;
-		this.interactions = interactions;
-	}
+    public IUPHARModel(Ligands ligands, Targets targets, InteractionsShort interactions)
+    {
+        super();
+        this.ligands = ligands;
+        this.targets = targets;
+        this.interactions = interactions;
+    }
 
-	public Ligands getLigands()
-	{
-		return this.ligands;
-	}
+    public Ligands getLigands()
+    {
+        return this.ligands;
+    }
 
-	public Targets getTargets()
-	{
-		return this.targets;
-	}
+    public Targets getTargets()
+    {
+        return this.targets;
+    }
 
-	public InteractionsShort getInteractions()
-	{
-		return this.interactions;
-	}
+    public InteractionsShort getInteractions()
+    {
+        return this.interactions;
+    }
 
-	public Map<Long, Functions> getTargetIdToFunctionsMap()
-	{
-		return this.targetIdToFunctionsMap;
-	}
+    public Map<Long, Functions> getTargetIdToFunctionsMap()
+    {
+        return this.targetIdToFunctionsMap;
+    }
 
-	public Map<Long, Synonyms> getTargetIdToSynonymsMap()
-	{
-		return this.targetIdToSynonymsMap;
-	}
+    public Map<Long, Synonyms> getTargetIdToSynonymsMap()
+    {
+        return this.targetIdToSynonymsMap;
+    }
 
-	public Map<Long, DatabaseLinks> getTargetIdToDatabaseLinksMap()
-	{
-		return this.targetIdToDatabaseLinksMap;
-	}
+    public Map<Long, DatabaseLinks> getTargetIdToDatabaseLinksMap()
+    {
+        return this.targetIdToDatabaseLinksMap;
+    }
 
-	public Map<Long, Synonyms> getLigandIdToSynonymsMap()
-	{
-		return this.ligandIdToSynonymsMap;
-	}
+    public Map<Long, Synonyms> getLigandIdToSynonymsMap()
+    {
+        return this.ligandIdToSynonymsMap;
+    }
 
-	public Map<Long, DatabaseLinks> getLigandIdToDatabaseLinksMap()
-	{
-		return this.ligandIdToDatabaseLinksMap;
-	}
+    public Map<Long, DatabaseLinks> getLigandIdToDatabaseLinksMap()
+    {
+        return this.ligandIdToDatabaseLinksMap;
+    }
 
-	public Map<Long, Comments> getLigandIdToCommentsMap()
-	{
-		return this.ligandIdToCommentsMap;
-	}
+    public Map<Long, Comments> getLigandIdToCommentsMap()
+    {
+        return this.ligandIdToCommentsMap;
+    }
+
+    public Map<Long, GeneProteinInformations> getTargetIdToGeneProteinInformationMap()
+    {
+        return this.targetIdToGeneProteinInformationMap;
+    }
+
+    @Override
+    public String toString()
+    {
+        return JSONHelper.prettyPrint(this);
+    }
 
 }

@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.omnaest.metabolics.iuphar.domain.DatabaseLink.Database;
 import org.omnaest.metabolics.iuphar.wrapper.IUPHARModelManager;
 import org.omnaest.metabolics.iuphar.wrapper.IUPHARModelManagerLoader;
 
@@ -52,13 +53,32 @@ public class IUPHARUtilsTest
         //										.findTargets()
         //										.get());
 
-        modelManager.findLigandForMetabolite("adrenaline")
+        modelManager.findLigandForMetabolite("histamine")
                     .findTargets()
                     .get()
                     .stream()
                     .map(interactionWithTarget -> interactionWithTarget.getTarget()
                                                                        .getName())
                     .forEach(this.listTargetAndItsLigands(modelManager));
+
+    }
+
+    @Test
+    //    @Ignore
+    public void testGetInstanceFromFile2() throws Exception
+    {
+        IUPHARModelManager modelManager = IUPHARUtils.getInstance()
+                                                     .loadFromFile(this.file);
+
+        modelManager.findLigandForMetabolite("histamine")
+                    .findTargets()
+                    .getInteractions()
+                    .forEach(interaction ->
+                    {
+                        System.out.println(interaction.getName());
+                        System.out.println(interaction.getHumanGene());
+                        System.out.println(interaction.getHumanRelatedDatabaseId(Database.UNIPROT));
+                    });
 
     }
 

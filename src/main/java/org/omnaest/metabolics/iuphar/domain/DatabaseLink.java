@@ -18,51 +18,80 @@
 */
 package org.omnaest.metabolics.iuphar.domain;
 
+import org.apache.commons.lang.StringUtils;
+
 public class DatabaseLink
 {
-	private String	accession;
-	private String	database;
-	private String	url;
-	private String	species;
+    private String accession;
+    private String database;
+    private String url;
+    private String species;
 
-	public String getAccession()
-	{
-		return this.accession;
-	}
+    public static enum Database
+    {
+        UNIPROT("UniProtKB"), ENSEMBL("Ensembl Gene"), CHEMBL("ChEMBL"), DRUGBANK("DrugBank"), GPCRDB("GPCRDB");
 
-	public void setAccession(String accession)
-	{
-		this.accession = accession;
-	}
+        private String matchStr;
 
-	public String getDatabase()
-	{
-		return this.database;
-	}
+        private Database(String matchStr)
+        {
+            this.matchStr = matchStr;
+        }
 
-	public void setDatabase(String database)
-	{
-		this.database = database;
-	}
+        public boolean matches(String database)
+        {
+            return StringUtils.containsIgnoreCase(database, this.matchStr);
+        }
+    }
 
-	public String getUrl()
-	{
-		return this.url;
-	}
+    public boolean hasDatabase(Database database)
+    {
+        return database.matches(this.database);
+    }
 
-	public void setUrl(String url)
-	{
-		this.url = url;
-	}
+    public String getAccession()
+    {
+        return this.accession;
+    }
 
-	public String getSpecies()
-	{
-		return this.species;
-	}
+    public void setAccession(String accession)
+    {
+        this.accession = accession;
+    }
 
-	public void setSpecies(String species)
-	{
-		this.species = species;
-	}
+    public String getDatabase()
+    {
+        return this.database;
+    }
+
+    public void setDatabase(String database)
+    {
+        this.database = database;
+    }
+
+    public String getUrl()
+    {
+        return this.url;
+    }
+
+    public void setUrl(String url)
+    {
+        this.url = url;
+    }
+
+    public String getSpecies()
+    {
+        return this.species;
+    }
+
+    public void setSpecies(String species)
+    {
+        this.species = species;
+    }
+
+    public boolean hasSpeciesType(SpeciesType speciesType)
+    {
+        return speciesType.matches(this.species);
+    }
 
 }
