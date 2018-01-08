@@ -45,7 +45,7 @@ import org.omnaest.metabolics.iuphar.domain.raw.Target;
 import org.omnaest.metabolics.iuphar.domain.raw.Targets;
 import org.omnaest.metabolics.iuphar.utils.IdAndFutureValue;
 import org.omnaest.metabolics.iuphar.utils.JSONHelper;
-import org.omnaest.metabolics.iuphar.wrapper.IUPHARInteractionsWithLigandsManager;
+import org.omnaest.metabolics.iuphar.wrapper.InteractionsWithLigandsManager;
 import org.omnaest.metabolics.iuphar.wrapper.InteractionsWithTargetsManager;
 import org.omnaest.metabolics.iuphar.wrapper.LigandManager;
 import org.omnaest.metabolics.iuphar.wrapper.IUpharModelManager;
@@ -354,7 +354,7 @@ public class IUpharUtils
             return new TargetManager()
             {
                 @Override
-                public IUPHARInteractionsWithLigandsManager findLigands()
+                public InteractionsWithLigandsManager findLigands()
                 {
                     return this.createInteractionsWithLigandsManager(new InteractionsWithLigands(IUpharModelManagerImpl.this.iupharModel.getInteractions()
                                                                                                                                         .stream()
@@ -368,9 +368,9 @@ public class IUpharUtils
                                                                                                                                         .collect(Collectors.toList())));
                 }
 
-                private IUPHARInteractionsWithLigandsManager createInteractionsWithLigandsManager(InteractionsWithLigands interactionsWithLigands)
+                private InteractionsWithLigandsManager createInteractionsWithLigandsManager(InteractionsWithLigands interactionsWithLigands)
                 {
-                    return new IUPHARInteractionsWithLigandsManager()
+                    return new InteractionsWithLigandsManager()
                     {
                         @Override
                         public InteractionsWithLigands get()

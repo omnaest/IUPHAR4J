@@ -20,5 +20,5 @@ package org.omnaest.metabolics.iuphar.wrapper;
 
 public interface TargetManager
 {
-	IUPHARInteractionsWithLigandsManager findLigands();
+	InteractionsWithLigandsManager findLigands();
 }

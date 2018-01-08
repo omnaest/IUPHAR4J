@@ -20,7 +20,7 @@ package org.omnaest.metabolics.iuphar.wrapper;
 
 import org.omnaest.metabolics.iuphar.wrapper.domain.InteractionsWithLigands;
 
-public interface IUPHARInteractionsWithLigandsManager
+public interface InteractionsWithLigandsManager
 {
 	InteractionsWithLigands get();
 }
