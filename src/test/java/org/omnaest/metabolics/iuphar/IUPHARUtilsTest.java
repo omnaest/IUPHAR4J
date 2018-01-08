@@ -33,12 +33,13 @@ public class IUPHARUtilsTest
     private File file = new File("data/model.json");
 
     @Test
-    @Ignore
+    //    @Ignore
     public void testGetInstanceFromRestApi() throws Exception
     {
         IUPHARModelManagerLoader modelManager = IUPHARUtils.getInstance();
 
-        modelManager.loadFromRestApi()
+        modelManager.usingLocalCache()
+                    .loadFromRestApi()
                     .saveToFile(this.file);
 
     }
@@ -64,11 +65,12 @@ public class IUPHARUtilsTest
     }
 
     @Test
-    //    @Ignore
+    @Ignore
     public void testGetInstanceFromFile2() throws Exception
     {
         IUPHARModelManager modelManager = IUPHARUtils.getInstance()
-                                                     .loadFromFile(this.file);
+                                                     .usingLocalCache()
+                                                     .loadFromRestApi();
 
         modelManager.findLigandForMetabolite("histamine")
                     .findTargets()

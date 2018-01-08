@@ -28,70 +28,166 @@ import org.omnaest.metabolics.iuphar.domain.raw.Ligand;
 import org.omnaest.metabolics.iuphar.domain.raw.Ligands;
 import org.omnaest.metabolics.iuphar.domain.raw.Synonyms;
 import org.omnaest.metabolics.iuphar.domain.raw.Targets;
-import org.omnaest.metabolics.iuphar.utils.JSONHelper;
-import org.omnaest.metabolics.iuphar.utils.RestHelper;
+import org.omnaest.utils.cache.Cache;
+import org.omnaest.utils.rest.client.JSONRestClient;
+import org.omnaest.utils.rest.client.RestClient;
+import org.omnaest.utils.rest.client.RestClient.Proxy;
 
 public class IUPHARRestApiUtils
 {
-    private final static String BASE_URL = "http://www.guidetopharmacology.org/services";
 
-    public static Targets getTargets()
+    public static interface IUpharRestAccessor
     {
-        return JSONHelper.readFromString(RestHelper.requestGet(BASE_URL + "/targets"), Targets.class);
+        IUpharRestAccessor withBaseUrl(String baseUrl);
+
+        IUpharRestAccessor withProxy(Proxy proxy);
+
+        IUpharRestAccessor usingCache(Cache cache);
+
+        Comments getLigandComments(Long ligandId);
+
+        Ligands getLigands();
+
+        DatabaseLinks getLigandDatabaseLinks(long ligandId);
+
+        Synonyms getLigandSynonyms(long ligandId);
+
+        Ligand getLigand(Long ligandId);
+
+        InteractionsShort getInteractions();
+
+        Interactions getTargetInteractions(Long targetId);
+
+        DatabaseLinks getTargetDatabaseLinks(long targetId);
+
+        Synonyms getTargetSynonyms(long targetId);
+
+        GeneProteinInformations getTargetGeneProteinInformation(long targetId);
+
+        Functions getTargetFunction(long targetId);
+
+        Targets getTargets();
     }
 
-    public static Functions getTargetFunction(long targetId)
+    public static IUpharRestAccessor getInstance()
     {
-        return JSONHelper.readFromString(RestHelper.requestGet(BASE_URL + "/targets/" + targetId + "/function"), Functions.class);
+        return new IUpharRestAccessor()
+        {
+            private String baseUrl = "http://www.guidetopharmacology.org/services";
+            private Cache  cache;
+            private Proxy  proxy;
+
+            @Override
+            public IUpharRestAccessor withBaseUrl(String baseUrl)
+            {
+                this.baseUrl = baseUrl;
+                return this;
+            }
+
+            @Override
+            public IUpharRestAccessor usingCache(Cache cache)
+            {
+                this.cache = cache;
+                return this;
+            }
+
+            @Override
+            public IUpharRestAccessor withProxy(Proxy proxy)
+            {
+                this.proxy = proxy;
+                return this;
+            }
+
+            private RestClient getRestClient()
+            {
+                return new JSONRestClient().withProxy(this.proxy)
+                                           .withCache(this.cache);
+            }
+
+            @Override
+            public Targets getTargets()
+            {
+                return this.getRestClient()
+                           .requestGet(this.baseUrl + "/targets", Targets.class);
+            }
+
+            @Override
+            public Functions getTargetFunction(long targetId)
+            {
+                return this.getRestClient()
+                           .requestGet(this.baseUrl + "/targets/" + targetId + "/function", Functions.class);
+            }
+
+            @Override
+            public GeneProteinInformations getTargetGeneProteinInformation(long targetId)
+            {
+                return this.getRestClient()
+                           .requestGet(this.baseUrl + "/targets/" + targetId + "/geneProteinInformation", GeneProteinInformations.class);
+            }
+
+            @Override
+            public Synonyms getTargetSynonyms(long targetId)
+            {
+                return this.getRestClient()
+                           .requestGet(this.baseUrl + "/targets/" + targetId + "/synonyms", Synonyms.class);
+            }
+
+            @Override
+            public DatabaseLinks getTargetDatabaseLinks(long targetId)
+            {
+                return this.getRestClient()
+                           .requestGet(this.baseUrl + "/targets/" + targetId + "/databaseLinks", DatabaseLinks.class);
+            }
+
+            @Override
+            public Interactions getTargetInteractions(Long targetId)
+            {
+                return this.getRestClient()
+                           .requestGet(this.baseUrl + "/targets/" + targetId + "/interactions", Interactions.class);
+            }
+
+            @Override
+            public InteractionsShort getInteractions()
+            {
+                return this.getRestClient()
+                           .requestGet(this.baseUrl + "/interactions", InteractionsShort.class);
+            }
+
+            @Override
+            public Ligand getLigand(Long ligandId)
+            {
+                return this.getRestClient()
+                           .requestGet(this.baseUrl + "/ligands/" + ligandId, Ligand.class);
+            }
+
+            @Override
+            public Synonyms getLigandSynonyms(long ligandId)
+            {
+                return this.getRestClient()
+                           .requestGet(this.baseUrl + "/ligands/" + ligandId + "/synonyms", Synonyms.class);
+            }
+
+            @Override
+            public DatabaseLinks getLigandDatabaseLinks(long ligandId)
+            {
+                return this.getRestClient()
+                           .requestGet(this.baseUrl + "/ligands/" + ligandId + "/databaseLinks", DatabaseLinks.class);
+            }
+
+            @Override
+            public Ligands getLigands()
+            {
+                return this.getRestClient()
+                           .requestGet(this.baseUrl + "/ligands", Ligands.class);
+            }
+
+            @Override
+            public Comments getLigandComments(Long ligandId)
+            {
+                return this.getRestClient()
+                           .requestGet(this.baseUrl + "/ligands/" + ligandId + "/comments", Comments.class);
+            }
+        };
     }
 
-    public static GeneProteinInformations getTargetGeneProteinInformation(long targetId)
-    {
-        return JSONHelper.readFromString(RestHelper.requestGet(BASE_URL + "/targets/" + targetId + "/geneProteinInformation"), GeneProteinInformations.class);
-    }
-
-    public static Synonyms getTargetSynonyms(long targetId)
-    {
-        return JSONHelper.readFromString(RestHelper.requestGet(BASE_URL + "/targets/" + targetId + "/synonyms"), Synonyms.class);
-    }
-
-    public static DatabaseLinks getTargetDatabaseLinks(long targetId)
-    {
-        return JSONHelper.readFromString(RestHelper.requestGet(BASE_URL + "/targets/" + targetId + "/databaseLinks"), DatabaseLinks.class);
-    }
-
-    public static Interactions getTargetInteractions(Long targetId)
-    {
-        return JSONHelper.readFromString(RestHelper.requestGet(BASE_URL + "/targets/" + targetId + "/interactions"), Interactions.class);
-    }
-
-    public static InteractionsShort getInteractions()
-    {
-        return JSONHelper.readFromString(RestHelper.requestGet(BASE_URL + "/interactions"), InteractionsShort.class);
-    }
-
-    public static Ligand getLigand(Long ligandId)
-    {
-        return JSONHelper.readFromString(RestHelper.requestGet(BASE_URL + "/ligands/" + ligandId), Ligand.class);
-    }
-
-    public static Synonyms getLigandSynonyms(long ligandId)
-    {
-        return JSONHelper.readFromString(RestHelper.requestGet(BASE_URL + "/ligands/" + ligandId + "/synonyms"), Synonyms.class);
-    }
-
-    public static DatabaseLinks getLigandDatabaseLinks(long ligandId)
-    {
-        return JSONHelper.readFromString(RestHelper.requestGet(BASE_URL + "/ligands/" + ligandId + "/databaseLinks"), DatabaseLinks.class);
-    }
-
-    public static Ligands getLigands()
-    {
-        return JSONHelper.readFromString(RestHelper.requestGet(BASE_URL + "/ligands"), Ligands.class);
-    }
-
-    public static Comments getLigandComments(Long ligandId)
-    {
-        return JSONHelper.readFromString(RestHelper.requestGet(BASE_URL + "/ligands/" + ligandId + "/comments"), Comments.class);
-    }
 }

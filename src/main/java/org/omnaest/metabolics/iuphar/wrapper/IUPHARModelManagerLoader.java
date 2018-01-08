@@ -21,10 +21,18 @@ package org.omnaest.metabolics.iuphar.wrapper;
 import java.io.File;
 import java.io.IOException;
 
+import org.omnaest.utils.cache.Cache;
+import org.omnaest.utils.rest.client.RestClient.Proxy;
+
 public interface IUPHARModelManagerLoader
 {
+    IUPHARModelManagerLoader usingLocalCache();
 
-	IUPHARModelManager loadFromFile(File file) throws IOException;
+    IUPHARModelManagerLoader usingCache(Cache cache);
 
-	IUPHARModelManager loadFromRestApi();
+    IUPHARModelManagerLoader usingProxy(Proxy proxy);
+
+    IUPHARModelManager loadFromFile(File file) throws IOException;
+
+    IUPHARModelManager loadFromRestApi();
 }

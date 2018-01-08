@@ -38,7 +38,8 @@ public class IUPHARRestApiUtilsTest
     @Ignore
     public void testGetTargets() throws Exception
     {
-        Targets targets = IUPHARRestApiUtils.getTargets();
+        Targets targets = IUPHARRestApiUtils.getInstance()
+                                            .getTargets();
         System.out.println(JSONHelper.prettyPrint(targets));
     }
 
@@ -46,7 +47,8 @@ public class IUPHARRestApiUtilsTest
     @Ignore
     public void testGetTargetInteractions() throws Exception
     {
-        Interactions interactions = IUPHARRestApiUtils.getTargetInteractions(262l);
+        Interactions interactions = IUPHARRestApiUtils.getInstance()
+                                                      .getTargetInteractions(262l);
         System.out.println(JSONHelper.prettyPrint(interactions));
     }
 
@@ -54,7 +56,8 @@ public class IUPHARRestApiUtilsTest
     @Ignore
     public void testGetLigand() throws Exception
     {
-        Ligand ligand = IUPHARRestApiUtils.getLigand(8299l);
+        Ligand ligand = IUPHARRestApiUtils.getInstance()
+                                          .getLigand(8299l);
         System.out.println(JSONHelper.prettyPrint(ligand));
     }
 
@@ -62,7 +65,8 @@ public class IUPHARRestApiUtilsTest
     @Ignore
     public void testGetLigands() throws Exception
     {
-        Ligands ligands = IUPHARRestApiUtils.getLigands();
+        Ligands ligands = IUPHARRestApiUtils.getInstance()
+                                            .getLigands();
         System.out.println(JSONHelper.prettyPrint(ligands));
     }
 
@@ -70,7 +74,8 @@ public class IUPHARRestApiUtilsTest
     @Ignore
     public void testGetInteractions() throws Exception
     {
-        InteractionsShort interactions = IUPHARRestApiUtils.getInteractions();
+        InteractionsShort interactions = IUPHARRestApiUtils.getInstance()
+                                                           .getInteractions();
         System.out.println(JSONHelper.prettyPrint(interactions));
     }
 
@@ -78,7 +83,8 @@ public class IUPHARRestApiUtilsTest
     @Ignore
     public void testGetTargetFunction() throws Exception
     {
-        Functions functions = IUPHARRestApiUtils.getTargetFunction(262l);
+        Functions functions = IUPHARRestApiUtils.getInstance()
+                                                .getTargetFunction(262l);
         System.out.println(JSONHelper.prettyPrint(functions));
     }
 
@@ -86,7 +92,8 @@ public class IUPHARRestApiUtilsTest
     @Ignore
     public void testGetTargetSynonyms() throws Exception
     {
-        Synonyms synonyms = IUPHARRestApiUtils.getTargetSynonyms(262l);
+        Synonyms synonyms = IUPHARRestApiUtils.getInstance()
+                                              .getTargetSynonyms(262l);
         System.out.println(JSONHelper.prettyPrint(synonyms));
     }
 
@@ -94,7 +101,8 @@ public class IUPHARRestApiUtilsTest
     @Ignore
     public void testGetTargetDatabaseLinks() throws Exception
     {
-        DatabaseLinks links = IUPHARRestApiUtils.getTargetDatabaseLinks(262l);
+        DatabaseLinks links = IUPHARRestApiUtils.getInstance()
+                                                .getTargetDatabaseLinks(262l);
         System.out.println(JSONHelper.prettyPrint(links));
     }
 
@@ -102,7 +110,8 @@ public class IUPHARRestApiUtilsTest
     @Ignore
     public void testGetLigandSynonyms() throws Exception
     {
-        Synonyms synonyms = IUPHARRestApiUtils.getLigandSynonyms(47l);
+        Synonyms synonyms = IUPHARRestApiUtils.getInstance()
+                                              .getLigandSynonyms(47l);
         System.out.println(JSONHelper.prettyPrint(synonyms));
     }
 
@@ -110,14 +119,16 @@ public class IUPHARRestApiUtilsTest
     @Ignore
     public void testGetLigandDatabaseLinks() throws Exception
     {
-        DatabaseLinks links = IUPHARRestApiUtils.getLigandDatabaseLinks(47l);
+        DatabaseLinks links = IUPHARRestApiUtils.getInstance()
+                                                .getLigandDatabaseLinks(47l);
         System.out.println(JSONHelper.prettyPrint(links));
     }
 
     @Test
     public void testGetTargetGeneProteinInformation() throws Exception
     {
-        GeneProteinInformations geneProteinInformation = IUPHARRestApiUtils.getTargetGeneProteinInformation(1);
+        GeneProteinInformations geneProteinInformation = IUPHARRestApiUtils.getInstance()
+                                                                           .getTargetGeneProteinInformation(1);
         System.out.println(JSONHelper.prettyPrint(geneProteinInformation));
     }
 

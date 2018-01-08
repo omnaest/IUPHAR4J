@@ -21,16 +21,17 @@ package org.omnaest.metabolics.iuphar.wrapper;
 import java.io.File;
 import java.io.IOException;
 
-public interface IUPHARModelManager extends IUPHARModelManagerLoader
+public interface IUPHARModelManager
 {
 
-	IUPHARModelManager saveToFile(File file) throws IOException;
+    IUPHARModelManager saveToFile(File file) throws IOException;
 
-	IUPHARLigandManager findLigand(String string);
+    IUPHARLigandManager findLigand(String string);
 
-	IUPHARLigandManager findLigand(long ligandId);
+    IUPHARLigandManager findLigand(long ligandId);
 
-	IUPHARLigandManager findLigandForMetabolite(String metabolite);
+    IUPHARLigandManager findLigandForMetabolite(String metabolite);
 
-	IUPHARTargetManager findTargetByName(String targetName);
+    IUPHARTargetManager findTargetByName(String targetName);
+
 }
