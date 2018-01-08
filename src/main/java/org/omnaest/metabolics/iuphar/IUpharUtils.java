@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
-import org.omnaest.metabolics.iuphar.IUPHARRestApiUtils.IUpharRestAccessor;
+import org.omnaest.metabolics.iuphar.IUpharRESTUtils.IUpharRestAccessor;
 import org.omnaest.metabolics.iuphar.domain.InteractionAccessor;
 import org.omnaest.metabolics.iuphar.domain.raw.DatabaseLink;
 import org.omnaest.metabolics.iuphar.domain.raw.DatabaseLink.Database;
@@ -46,12 +46,12 @@ import org.omnaest.metabolics.iuphar.domain.raw.Targets;
 import org.omnaest.metabolics.iuphar.utils.IdAndFutureValue;
 import org.omnaest.metabolics.iuphar.utils.JSONHelper;
 import org.omnaest.metabolics.iuphar.wrapper.IUPHARInteractionsWithLigandsManager;
-import org.omnaest.metabolics.iuphar.wrapper.IUPHARInteractionsWithTargetsManager;
-import org.omnaest.metabolics.iuphar.wrapper.IUPHARLigandManager;
-import org.omnaest.metabolics.iuphar.wrapper.IUPHARModelManager;
-import org.omnaest.metabolics.iuphar.wrapper.IUPHARModelManagerLoader;
-import org.omnaest.metabolics.iuphar.wrapper.IUPHARTargetManager;
-import org.omnaest.metabolics.iuphar.wrapper.domain.IUPHARModel;
+import org.omnaest.metabolics.iuphar.wrapper.InteractionsWithTargetsManager;
+import org.omnaest.metabolics.iuphar.wrapper.LigandManager;
+import org.omnaest.metabolics.iuphar.wrapper.IUpharModelManager;
+import org.omnaest.metabolics.iuphar.wrapper.IUpharModelManagerLoader;
+import org.omnaest.metabolics.iuphar.wrapper.TargetManager;
+import org.omnaest.metabolics.iuphar.wrapper.domain.IUpharModel;
 import org.omnaest.metabolics.iuphar.wrapper.domain.InteractionWithLigand;
 import org.omnaest.metabolics.iuphar.wrapper.domain.InteractionWithTarget;
 import org.omnaest.metabolics.iuphar.wrapper.domain.InteractionsWithLigands;
@@ -62,14 +62,14 @@ import org.omnaest.utils.rest.client.RestClient.Proxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class IUPHARUtils
+public class IUpharUtils
 {
-    private final static Logger LOG = LoggerFactory.getLogger(IUPHARUtils.class);
+    private final static Logger LOG = LoggerFactory.getLogger(IUpharUtils.class);
 
-    private static class IUpharModelManagerImpl implements IUPHARModelManagerLoader, IUPHARModelManager
+    private static class IUpharModelManagerImpl implements IUpharModelManagerLoader, IUpharModelManager
     {
-        private IUPHARModel        iupharModel;
-        private IUpharRestAccessor restAccessor = IUPHARRestApiUtils.getInstance();
+        private IUpharModel        iupharModel;
+        private IUpharRestAccessor restAccessor = IUpharRESTUtils.getInstance();
 
         @Override
         public IUpharModelManagerImpl usingProxy(Proxy proxy)
@@ -92,13 +92,13 @@ public class IUPHARUtils
         }
 
         @Override
-        public IUPHARModelManager loadFromRestApi()
+        public IUpharModelManager loadFromRestApi()
         {
             Ligands ligands = this.restAccessor.getLigands();
             Targets targets = this.restAccessor.getTargets();
             InteractionsShort interactions = this.restAccessor.getInteractions();
 
-            this.iupharModel = new IUPHARModel(ligands, targets, interactions);
+            this.iupharModel = new IUpharModel(ligands, targets, interactions);
 
             try
             {
@@ -179,21 +179,21 @@ public class IUPHARUtils
         }
 
         @Override
-        public IUPHARModelManager loadFromFile(File file) throws IOException
+        public IUpharModelManager loadFromFile(File file) throws IOException
         {
-            this.iupharModel = JSONHelper.readFromString(FileUtils.readFileToString(file, "utf-8"), IUPHARModel.class);
+            this.iupharModel = JSONHelper.readFromString(FileUtils.readFileToString(file, "utf-8"), IUpharModel.class);
             return this;
         }
 
         @Override
-        public IUPHARModelManager saveToFile(File file) throws IOException
+        public IUpharModelManager saveToFile(File file) throws IOException
         {
             FileUtils.writeStringToFile(file, JSONHelper.prettyPrint(this.iupharModel), "utf-8");
             return this;
         }
 
         @Override
-        public IUPHARLigandManager findLigand(String name)
+        public LigandManager findLigand(String name)
         {
             return this.createLigandManager(this.iupharModel.getLigands()
                                                             .stream()
@@ -202,12 +202,12 @@ public class IUPHARUtils
                                                             .get());
         }
 
-        private IUPHARLigandManager createLigandManager(Ligand ligand)
+        private LigandManager createLigandManager(Ligand ligand)
         {
-            return new IUPHARLigandManager()
+            return new LigandManager()
             {
                 @Override
-                public IUPHARInteractionsWithTargetsManager findTargets()
+                public InteractionsWithTargetsManager findTargets()
                 {
                     InteractionsWithTargets interactionsWithTargets = new InteractionsWithTargets(IUpharModelManagerImpl.this.iupharModel.getInteractions()
                                                                                                                                          .stream()
@@ -221,9 +221,9 @@ public class IUPHARUtils
                     return this.createInteractionsWithTargetsManager(interactionsWithTargets);
                 }
 
-                private IUPHARInteractionsWithTargetsManager createInteractionsWithTargetsManager(InteractionsWithTargets interactionsWithTargets)
+                private InteractionsWithTargetsManager createInteractionsWithTargetsManager(InteractionsWithTargets interactionsWithTargets)
                 {
-                    return new IUPHARInteractionsWithTargetsManager()
+                    return new InteractionsWithTargetsManager()
                     {
                         @Override
                         public InteractionsWithTargets get()
@@ -309,7 +309,7 @@ public class IUPHARUtils
         }
 
         @Override
-        public IUPHARLigandManager findLigand(long ligandId)
+        public LigandManager findLigand(long ligandId)
         {
             return this.createLigandManager(this.iupharModel.getLigands()
                                                             .stream()
@@ -319,7 +319,7 @@ public class IUPHARUtils
         }
 
         @Override
-        public IUPHARLigandManager findLigandForMetabolite(String metabolite)
+        public LigandManager findLigandForMetabolite(String metabolite)
         {
             return this.createLigandManager(this.iupharModel.getLigands()
                                                             .stream()
@@ -335,7 +335,7 @@ public class IUPHARUtils
         }
 
         @Override
-        public IUPHARTargetManager findTargetByName(String name)
+        public TargetManager findTargetByName(String name)
         {
             return this.createTargetManager(this.iupharModel.getTargets()
                                                             .stream()
@@ -349,9 +349,9 @@ public class IUPHARUtils
                                                             .get());
         }
 
-        private IUPHARTargetManager createTargetManager(Target target)
+        private TargetManager createTargetManager(Target target)
         {
-            return new IUPHARTargetManager()
+            return new TargetManager()
             {
                 @Override
                 public IUPHARInteractionsWithLigandsManager findLigands()
@@ -384,7 +384,7 @@ public class IUPHARUtils
 
     }
 
-    public static IUPHARModelManagerLoader getInstance()
+    public static IUpharModelManagerLoader getInstance()
     {
         return new IUpharModelManagerImpl();
     }

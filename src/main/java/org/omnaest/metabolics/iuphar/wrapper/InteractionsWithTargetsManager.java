@@ -18,21 +18,14 @@
 */
 package org.omnaest.metabolics.iuphar.wrapper;
 
-import java.io.File;
-import java.io.IOException;
+import java.util.stream.Stream;
 
-import org.omnaest.utils.cache.Cache;
-import org.omnaest.utils.rest.client.RestClient.Proxy;
+import org.omnaest.metabolics.iuphar.domain.InteractionAccessor;
+import org.omnaest.metabolics.iuphar.wrapper.domain.InteractionsWithTargets;
 
-public interface IUPHARModelManagerLoader
+public interface InteractionsWithTargetsManager
 {
-    IUPHARModelManagerLoader usingLocalCache();
+    InteractionsWithTargets get();
 
-    IUPHARModelManagerLoader usingCache(Cache cache);
-
-    IUPHARModelManagerLoader usingProxy(Proxy proxy);
-
-    IUPHARModelManager loadFromFile(File file) throws IOException;
-
-    IUPHARModelManager loadFromRestApi();
+    public Stream<InteractionAccessor> getInteractions();
 }

@@ -31,7 +31,7 @@ import org.omnaest.metabolics.iuphar.domain.raw.Synonyms;
 import org.omnaest.metabolics.iuphar.domain.raw.Targets;
 import org.omnaest.metabolics.iuphar.utils.JSONHelper;
 
-public class IUPHARModel
+public class IUpharModel
 {
     private Ligands           ligands;
     private Targets           targets;
@@ -46,12 +46,12 @@ public class IUPHARModel
     private Map<Long, DatabaseLinks> ligandIdToDatabaseLinksMap = new ConcurrentHashMap<>();
     private Map<Long, Comments>      ligandIdToCommentsMap      = new ConcurrentHashMap<>();
 
-    public IUPHARModel()
+    public IUpharModel()
     {
         super();
     }
 
-    public IUPHARModel(Ligands ligands, Targets targets, InteractionsShort interactions)
+    public IUpharModel(Ligands ligands, Targets targets, InteractionsShort interactions)
     {
         super();
         this.ligands = ligands;

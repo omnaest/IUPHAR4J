@@ -24,10 +24,10 @@ import java.util.function.Consumer;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.omnaest.metabolics.iuphar.domain.raw.DatabaseLink.Database;
-import org.omnaest.metabolics.iuphar.wrapper.IUPHARModelManager;
-import org.omnaest.metabolics.iuphar.wrapper.IUPHARModelManagerLoader;
+import org.omnaest.metabolics.iuphar.wrapper.IUpharModelManager;
+import org.omnaest.metabolics.iuphar.wrapper.IUpharModelManagerLoader;
 
-public class IUPHARUtilsTest
+public class IUpharUtilsTest
 {
 
     private File file = new File("data/model.json");
@@ -36,7 +36,7 @@ public class IUPHARUtilsTest
     //    @Ignore
     public void testGetInstanceFromRestApi() throws Exception
     {
-        IUPHARModelManagerLoader modelManager = IUPHARUtils.getInstance();
+        IUpharModelManagerLoader modelManager = IUpharUtils.getInstance();
 
         modelManager.usingLocalCache()
                     .loadFromRestApi()
@@ -48,7 +48,7 @@ public class IUPHARUtilsTest
     @Ignore
     public void testGetInstanceFromFile() throws Exception
     {
-        IUPHARModelManager modelManager = IUPHARUtils.getInstance()
+        IUpharModelManager modelManager = IUpharUtils.getInstance()
                                                      .loadFromFile(this.file);
         //		System.out.println(modelManager	.findLigand("olanzapine")
         //										.findTargets()
@@ -68,7 +68,7 @@ public class IUPHARUtilsTest
     @Ignore
     public void testGetInstanceFromFile2() throws Exception
     {
-        IUPHARModelManager modelManager = IUPHARUtils.getInstance()
+        IUpharModelManager modelManager = IUpharUtils.getInstance()
                                                      .usingLocalCache()
                                                      .loadFromRestApi();
 
@@ -84,7 +84,7 @@ public class IUPHARUtilsTest
 
     }
 
-    private Consumer<? super String> listTargetAndItsLigands(IUPHARModelManager modelManager)
+    private Consumer<? super String> listTargetAndItsLigands(IUpharModelManager modelManager)
     {
         return targetName ->
         {

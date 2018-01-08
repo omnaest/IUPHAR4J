@@ -33,7 +33,7 @@ import org.omnaest.utils.rest.client.JSONRestClient;
 import org.omnaest.utils.rest.client.RestClient;
 import org.omnaest.utils.rest.client.RestClient.Proxy;
 
-public class IUPHARRestApiUtils
+public class IUpharRESTUtils
 {
 
     public static interface IUpharRestAccessor

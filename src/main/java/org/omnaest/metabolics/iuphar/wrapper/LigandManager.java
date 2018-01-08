@@ -18,20 +18,11 @@
 */
 package org.omnaest.metabolics.iuphar.wrapper;
 
-import java.io.File;
-import java.io.IOException;
+import org.omnaest.metabolics.iuphar.domain.raw.Ligand;
 
-public interface IUPHARModelManager
+public interface LigandManager
 {
+    InteractionsWithTargetsManager findTargets();
 
-    IUPHARModelManager saveToFile(File file) throws IOException;
-
-    IUPHARLigandManager findLigand(String string);
-
-    IUPHARLigandManager findLigand(long ligandId);
-
-    IUPHARLigandManager findLigandForMetabolite(String metabolite);
-
-    IUPHARTargetManager findTargetByName(String targetName);
-
+    Ligand get();
 }
