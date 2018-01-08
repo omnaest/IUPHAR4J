@@ -23,7 +23,7 @@ import java.util.function.Consumer;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.omnaest.metabolics.iuphar.domain.DatabaseLink.Database;
+import org.omnaest.metabolics.iuphar.domain.raw.DatabaseLink.Database;
 import org.omnaest.metabolics.iuphar.wrapper.IUPHARModelManager;
 import org.omnaest.metabolics.iuphar.wrapper.IUPHARModelManagerLoader;
 

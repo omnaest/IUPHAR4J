@@ -16,31 +16,13 @@
 
 
 */
-package org.omnaest.metabolics.iuphar.domain;
+package org.omnaest.metabolics.iuphar.domain.raw;
 
-public class Synonym
+import java.util.ArrayList;
+
+public class Ligands extends ArrayList<Ligand>
 {
-	private String		name;
-	private References	refs;
 
-	public String getName()
-	{
-		return this.name;
-	}
-
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-
-	public References getRefs()
-	{
-		return this.refs;
-	}
-
-	public void setRefs(References refs)
-	{
-		this.refs = refs;
-	}
+	private static final long serialVersionUID = 7758837979025169552L;
 
 }

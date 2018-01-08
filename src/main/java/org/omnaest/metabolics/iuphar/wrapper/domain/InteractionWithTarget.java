@@ -18,8 +18,8 @@
 */
 package org.omnaest.metabolics.iuphar.wrapper.domain;
 
-import org.omnaest.metabolics.iuphar.domain.InteractionShort;
-import org.omnaest.metabolics.iuphar.domain.Target;
+import org.omnaest.metabolics.iuphar.domain.raw.InteractionShort;
+import org.omnaest.metabolics.iuphar.domain.raw.Target;
 
 public class InteractionWithTarget
 {

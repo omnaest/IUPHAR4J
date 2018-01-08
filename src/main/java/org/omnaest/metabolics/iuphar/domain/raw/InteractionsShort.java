@@ -1,4 +1,4 @@
-/*
+/* 
 
 	Copyright 2017 Danny Kunz
 
@@ -13,14 +13,16 @@
 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 	See the License for the specific language governing permissions and
 	limitations under the License.
-
+	
 
 */
-package org.omnaest.metabolics.iuphar.domain;
+package org.omnaest.metabolics.iuphar.domain.raw;
 
 import java.util.ArrayList;
 
-public class Functions extends ArrayList<Function>
+public class InteractionsShort extends ArrayList<InteractionShort>
 {
-	private static final long serialVersionUID = -7096266362845168255L;
+
+	private static final long serialVersionUID = 4607775631322449877L;
+
 }

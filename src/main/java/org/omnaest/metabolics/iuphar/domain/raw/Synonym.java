@@ -1,4 +1,4 @@
-/* 
+/*
 
 	Copyright 2017 Danny Kunz
 
@@ -13,16 +13,34 @@
 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 	See the License for the specific language governing permissions and
 	limitations under the License.
-	
+
 
 */
-package org.omnaest.metabolics.iuphar.domain;
+package org.omnaest.metabolics.iuphar.domain.raw;
 
-import java.util.ArrayList;
-
-public class DatabaseLinks extends ArrayList<DatabaseLink>
+public class Synonym
 {
+	private String		name;
+	private References	refs;
 
-	private static final long serialVersionUID = -8375025778150334300L;
+	public String getName()
+	{
+		return this.name;
+	}
+
+	public void setName(String name)
+	{
+		this.name = name;
+	}
+
+	public References getRefs()
+	{
+		return this.refs;
+	}
+
+	public void setRefs(References refs)
+	{
+		this.refs = refs;
+	}
 
 }

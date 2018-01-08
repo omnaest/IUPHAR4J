@@ -18,7 +18,7 @@
 */
 package org.omnaest.metabolics.iuphar.wrapper;
 
-import org.omnaest.metabolics.iuphar.domain.Ligand;
+import org.omnaest.metabolics.iuphar.domain.raw.Ligand;
 
 public interface IUPHARLigandManager
 {

@@ -18,9 +18,9 @@
 */
 package org.omnaest.metabolics.iuphar.wrapper.domain;
 
-import org.omnaest.metabolics.iuphar.domain.Comments;
-import org.omnaest.metabolics.iuphar.domain.InteractionShort;
-import org.omnaest.metabolics.iuphar.domain.Ligand;
+import org.omnaest.metabolics.iuphar.domain.raw.Comments;
+import org.omnaest.metabolics.iuphar.domain.raw.InteractionShort;
+import org.omnaest.metabolics.iuphar.domain.raw.Ligand;
 
 public class InteractionWithLigand
 {

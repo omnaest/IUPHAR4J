@@ -1,7 +1,7 @@
-package org.omnaest.metabolics.iuphar.wrapper.domain2;
+package org.omnaest.metabolics.iuphar.domain;
 
-import org.omnaest.metabolics.iuphar.domain.DatabaseLink.Database;
-import org.omnaest.metabolics.iuphar.domain.SpeciesType;
+import org.omnaest.metabolics.iuphar.domain.raw.SpeciesType;
+import org.omnaest.metabolics.iuphar.domain.raw.DatabaseLink.Database;
 
 public interface InteractionAccessor
 {

@@ -16,13 +16,30 @@
 
 
 */
-package org.omnaest.metabolics.iuphar.domain;
+package org.omnaest.metabolics.iuphar.domain.raw;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class Ligands extends ArrayList<Ligand>
+import org.omnaest.metabolics.iuphar.utils.JSONHelper;
+
+public class Targets extends ArrayList<Target>
 {
+	private static final long serialVersionUID = 4029533051260191930L;
 
-	private static final long serialVersionUID = 7758837979025169552L;
+	public Targets(List<Target> targets)
+	{
+		this.addAll(targets);
+	}
 
+	public Targets()
+	{
+		super();
+	}
+
+	@Override
+	public String toString()
+	{
+		return JSONHelper.prettyPrint(this);
+	}
 }

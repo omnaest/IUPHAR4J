@@ -1,4 +1,4 @@
-/*
+/* 
 
 	Copyright 2017 Danny Kunz
 
@@ -13,33 +13,16 @@
 	WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 	See the License for the specific language governing permissions and
 	limitations under the License.
-
+	
 
 */
-package org.omnaest.metabolics.iuphar.domain;
+package org.omnaest.metabolics.iuphar.domain.raw;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import org.omnaest.metabolics.iuphar.utils.JSONHelper;
-
-public class Targets extends ArrayList<Target>
+public class DatabaseLinks extends ArrayList<DatabaseLink>
 {
-	private static final long serialVersionUID = 4029533051260191930L;
 
-	public Targets(List<Target> targets)
-	{
-		this.addAll(targets);
-	}
+	private static final long serialVersionUID = -8375025778150334300L;
 
-	public Targets()
-	{
-		super();
-	}
-
-	@Override
-	public String toString()
-	{
-		return JSONHelper.prettyPrint(this);
-	}
 }

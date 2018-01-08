@@ -16,7 +16,7 @@
 	
 
 */
-package org.omnaest.metabolics.iuphar.domain;
+package org.omnaest.metabolics.iuphar.domain.raw;
 
 public class Reference
 {

@@ -16,7 +16,7 @@
 	
 
 */
-package org.omnaest.metabolics.iuphar.domain;
+package org.omnaest.metabolics.iuphar.domain.raw;
 
 import org.apache.commons.lang.StringUtils;
 

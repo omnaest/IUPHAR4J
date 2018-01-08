@@ -20,15 +20,15 @@ package org.omnaest.metabolics.iuphar;
 
 import org.junit.Ignore;
 import org.junit.Test;
-import org.omnaest.metabolics.iuphar.domain.DatabaseLinks;
-import org.omnaest.metabolics.iuphar.domain.Functions;
-import org.omnaest.metabolics.iuphar.domain.GeneProteinInformations;
-import org.omnaest.metabolics.iuphar.domain.Interactions;
-import org.omnaest.metabolics.iuphar.domain.InteractionsShort;
-import org.omnaest.metabolics.iuphar.domain.Ligand;
-import org.omnaest.metabolics.iuphar.domain.Ligands;
-import org.omnaest.metabolics.iuphar.domain.Synonyms;
-import org.omnaest.metabolics.iuphar.domain.Targets;
+import org.omnaest.metabolics.iuphar.domain.raw.DatabaseLinks;
+import org.omnaest.metabolics.iuphar.domain.raw.Functions;
+import org.omnaest.metabolics.iuphar.domain.raw.GeneProteinInformations;
+import org.omnaest.metabolics.iuphar.domain.raw.Interactions;
+import org.omnaest.metabolics.iuphar.domain.raw.InteractionsShort;
+import org.omnaest.metabolics.iuphar.domain.raw.Ligand;
+import org.omnaest.metabolics.iuphar.domain.raw.Ligands;
+import org.omnaest.metabolics.iuphar.domain.raw.Synonyms;
+import org.omnaest.metabolics.iuphar.domain.raw.Targets;
 import org.omnaest.metabolics.iuphar.utils.JSONHelper;
 
 public class IUPHARRestApiUtilsTest
