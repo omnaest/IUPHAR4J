@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.omnaest.metabolics.iuphar.domain.TargetAccessor;
 import org.omnaest.metabolics.iuphar.domain.raw.DatabaseLink.Database;
 import org.omnaest.metabolics.iuphar.wrapper.IUpharModelManager;
 import org.omnaest.metabolics.iuphar.wrapper.IUpharModelManagerLoader;
@@ -33,7 +34,7 @@ public class IUpharUtilsTest
     private File file = new File("data/model.json");
 
     @Test
-    //    @Ignore
+    @Ignore
     public void testGetInstanceFromRestApi() throws Exception
     {
         IUpharModelManagerLoader modelManager = IUpharUtils.getInstance();
@@ -44,42 +45,55 @@ public class IUpharUtilsTest
 
     }
 
-    @Test
-    @Ignore
-    public void testGetInstanceFromFile() throws Exception
-    {
-        IUpharModelManager modelManager = IUpharUtils.getInstance()
-                                                     .loadFromFile(this.file);
-        //		System.out.println(modelManager	.findLigand("olanzapine")
-        //										.findTargets()
-        //										.get());
-
-        modelManager.findLigandForMetabolite("histamine")
-                    .findTargets()
-                    .get()
-                    .stream()
-                    .map(interactionWithTarget -> interactionWithTarget.getTarget()
-                                                                       .getName())
-                    .forEach(this.listTargetAndItsLigands(modelManager));
-
-    }
+    //    @Test
+    //    @Ignore
+    //    public void testGetInstanceFromFile() throws Exception
+    //    {
+    //        IUpharModelManager modelManager = IUpharUtils.getInstance()
+    //                                                     .loadFromFile(this.file);
+    //        //		System.out.println(modelManager	.findLigand("olanzapine")
+    //        //										.findTargets()
+    //        //										.get());
+    //
+    //        modelManager.findLigandForMetaboliteOld("histamine")
+    //                    .findTargets()
+    //                    .get()
+    //                    .stream()
+    //                    .map(interactionWithTarget -> interactionWithTarget.getTarget()
+    //                                                                       .getName())
+    //                    .forEach(this.listTargetAndItsLigands(modelManager));
+    //
+    //    }
 
     @Test
     @Ignore
     public void testGetInstanceFromFile2() throws Exception
     {
         IUpharModelManager modelManager = IUpharUtils.getInstance()
-                                                     .usingLocalCache()
-                                                     .loadFromRestApi();
+                                                     .loadFromFile(this.file);
 
         modelManager.findLigandForMetabolite("histamine")
-                    .findTargets()
-                    .getInteractions()
+                    .findFirst()
+                    .get()
+                    .getTargetInteractions()
                     .forEach(interaction ->
                     {
-                        System.out.println(interaction.getName());
-                        System.out.println(interaction.getHumanGene());
-                        System.out.println(interaction.getHumanRelatedDatabaseId(Database.UNIPROT));
+                        TargetAccessor target = interaction.getTarget();
+                        System.out.println(target.getName());
+                        System.out.println("  " + target.getHumanGene());
+                        System.out.println("  " + target.getHumanRelatedDatabaseId(Database.UNIPROT));
+
+                        target.getLigandInteractions()
+                              .forEach(ligandInteraction ->
+                              {
+                                  System.out.println("   " + ligandInteraction.getLigand()
+                                                                              .getName());
+                                  System.out.println("    " + ligandInteraction.getProperties()
+                                                                               .getAffinityPKi());
+                                  System.out.println("    " + ligandInteraction.getProperties()
+                                                                               .getActionType());
+
+                              });
                     });
 
     }

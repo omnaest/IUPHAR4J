@@ -1,9 +1,11 @@
 package org.omnaest.metabolics.iuphar.domain;
 
-import org.omnaest.metabolics.iuphar.domain.raw.SpeciesType;
-import org.omnaest.metabolics.iuphar.domain.raw.DatabaseLink.Database;
+import java.util.stream.Stream;
 
-public interface InteractionAccessor
+import org.omnaest.metabolics.iuphar.domain.raw.DatabaseLink.Database;
+import org.omnaest.metabolics.iuphar.domain.raw.SpeciesType;
+
+public interface TargetAccessor
 {
     public String getName();
 
@@ -14,4 +16,6 @@ public interface InteractionAccessor
     public String getGene(SpeciesType speciesType);
 
     public String getHumanGene();
+
+    public Stream<LigandInteractionAccessor> getLigandInteractions();
 }

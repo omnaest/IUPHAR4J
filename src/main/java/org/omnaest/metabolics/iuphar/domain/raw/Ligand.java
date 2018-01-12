@@ -18,209 +18,187 @@
 */
 package org.omnaest.metabolics.iuphar.domain.raw;
 
-import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class Ligand
 {
-	private Long		ligandId;
-	private String		name;
-	private String		abbreviation;
-	private String		inn;
-	private String		type;
-	private String		species;
-	private Boolean		radioactive;
-	private Boolean		labelled;
-	private Boolean		approved;
-	private Boolean		withdrawn;
-	private String		approvalSource;
-	private List<Long>	subunitIds;
-	private List<Long>	complexIds;
-	private List<Long>	prodrugIds;
-	private List<Long>	activeDrugIds;
+    private Long       ligandId;
+    private String     name;
+    private String     abbreviation;
+    private String     inn;
+    private String     type;
+    private String     species;
+    private Boolean    radioactive;
+    private Boolean    labelled;
+    private Boolean    approved;
+    private Boolean    withdrawn;
+    private String     approvalSource;
+    private List<Long> subunitIds;
+    private List<Long> complexIds;
+    private List<Long> prodrugIds;
+    private List<Long> activeDrugIds;
 
-	public static enum Type
-	{
-		Metabolite("Metabolite"), Synthetic_organic("Synthetic organic");
+    public boolean hasType(LigandType ligandType)
+    {
+        return ligandType != null && ligandType.equals(this.getTypeAsEnum());
+    }
 
-		private String type;
+    @JsonIgnore
+    public LigandType getTypeAsEnum()
+    {
+        return LigandType.fromType(this.type);
+    }
 
-		private Type(String type)
-		{
-			this.type = type;
-		}
+    public Long getLigandId()
+    {
+        return this.ligandId;
+    }
 
-		public static Type fromType(String type)
-		{
-			return Arrays	.asList(values())
-							.stream()
-							.filter(value -> value.type.equalsIgnoreCase(type))
-							.findFirst()
-							.orElseGet(() -> null);
-		}
-	}
+    public void setLigandId(Long ligandId)
+    {
+        this.ligandId = ligandId;
+    }
 
-	public boolean hasType(Type type)
-	{
-		return type != null && type.equals(this.getTypeAsEnum());
-	}
+    public String getName()
+    {
+        return this.name;
+    }
 
-	@JsonIgnore
-	public Type getTypeAsEnum()
-	{
-		return Type.fromType(this.type);
-	}
+    public void setName(String name)
+    {
+        this.name = name;
+    }
 
-	public Long getLigandId()
-	{
-		return this.ligandId;
-	}
+    public String getAbbreviation()
+    {
+        return this.abbreviation;
+    }
 
-	public void setLigandId(Long ligandId)
-	{
-		this.ligandId = ligandId;
-	}
+    public void setAbbreviation(String abbreviation)
+    {
+        this.abbreviation = abbreviation;
+    }
 
-	public String getName()
-	{
-		return this.name;
-	}
+    public String getInn()
+    {
+        return this.inn;
+    }
 
-	public void setName(String name)
-	{
-		this.name = name;
-	}
+    public void setInn(String inn)
+    {
+        this.inn = inn;
+    }
 
-	public String getAbbreviation()
-	{
-		return this.abbreviation;
-	}
+    public String getType()
+    {
+        return this.type;
+    }
 
-	public void setAbbreviation(String abbreviation)
-	{
-		this.abbreviation = abbreviation;
-	}
+    public void setType(String type)
+    {
+        this.type = type;
+    }
 
-	public String getInn()
-	{
-		return this.inn;
-	}
+    public String getSpecies()
+    {
+        return this.species;
+    }
 
-	public void setInn(String inn)
-	{
-		this.inn = inn;
-	}
+    public void setSpecies(String species)
+    {
+        this.species = species;
+    }
 
-	public String getType()
-	{
-		return this.type;
-	}
+    public Boolean getRadioactive()
+    {
+        return this.radioactive;
+    }
 
-	public void setType(String type)
-	{
-		this.type = type;
-	}
+    public void setRadioactive(Boolean radioactive)
+    {
+        this.radioactive = radioactive;
+    }
 
-	public String getSpecies()
-	{
-		return this.species;
-	}
+    public Boolean getLabelled()
+    {
+        return this.labelled;
+    }
 
-	public void setSpecies(String species)
-	{
-		this.species = species;
-	}
+    public void setLabelled(Boolean labelled)
+    {
+        this.labelled = labelled;
+    }
 
-	public Boolean getRadioactive()
-	{
-		return this.radioactive;
-	}
+    public Boolean getApproved()
+    {
+        return this.approved;
+    }
 
-	public void setRadioactive(Boolean radioactive)
-	{
-		this.radioactive = radioactive;
-	}
+    public void setApproved(Boolean approved)
+    {
+        this.approved = approved;
+    }
 
-	public Boolean getLabelled()
-	{
-		return this.labelled;
-	}
+    public Boolean getWithdrawn()
+    {
+        return this.withdrawn;
+    }
 
-	public void setLabelled(Boolean labelled)
-	{
-		this.labelled = labelled;
-	}
+    public void setWithdrawn(Boolean withdrawn)
+    {
+        this.withdrawn = withdrawn;
+    }
 
-	public Boolean getApproved()
-	{
-		return this.approved;
-	}
+    public String getApprovalSource()
+    {
+        return this.approvalSource;
+    }
 
-	public void setApproved(Boolean approved)
-	{
-		this.approved = approved;
-	}
+    public void setApprovalSource(String approvalSource)
+    {
+        this.approvalSource = approvalSource;
+    }
 
-	public Boolean getWithdrawn()
-	{
-		return this.withdrawn;
-	}
+    public List<Long> getSubunitIds()
+    {
+        return this.subunitIds;
+    }
 
-	public void setWithdrawn(Boolean withdrawn)
-	{
-		this.withdrawn = withdrawn;
-	}
+    public void setSubunitIds(List<Long> subunitIds)
+    {
+        this.subunitIds = subunitIds;
+    }
 
-	public String getApprovalSource()
-	{
-		return this.approvalSource;
-	}
+    public List<Long> getComplexIds()
+    {
+        return this.complexIds;
+    }
 
-	public void setApprovalSource(String approvalSource)
-	{
-		this.approvalSource = approvalSource;
-	}
+    public void setComplexIds(List<Long> complexIds)
+    {
+        this.complexIds = complexIds;
+    }
 
-	public List<Long> getSubunitIds()
-	{
-		return this.subunitIds;
-	}
+    public List<Long> getProdrugIds()
+    {
+        return this.prodrugIds;
+    }
 
-	public void setSubunitIds(List<Long> subunitIds)
-	{
-		this.subunitIds = subunitIds;
-	}
+    public void setProdrugIds(List<Long> prodrugIds)
+    {
+        this.prodrugIds = prodrugIds;
+    }
 
-	public List<Long> getComplexIds()
-	{
-		return this.complexIds;
-	}
+    public List<Long> getActiveDrugIds()
+    {
+        return this.activeDrugIds;
+    }
 
-	public void setComplexIds(List<Long> complexIds)
-	{
-		this.complexIds = complexIds;
-	}
-
-	public List<Long> getProdrugIds()
-	{
-		return this.prodrugIds;
-	}
-
-	public void setProdrugIds(List<Long> prodrugIds)
-	{
-		this.prodrugIds = prodrugIds;
-	}
-
-	public List<Long> getActiveDrugIds()
-	{
-		return this.activeDrugIds;
-	}
-
-	public void setActiveDrugIds(List<Long> activeDrugIds)
-	{
-		this.activeDrugIds = activeDrugIds;
-	}
+    public void setActiveDrugIds(List<Long> activeDrugIds)
+    {
+        this.activeDrugIds = activeDrugIds;
+    }
 
 }

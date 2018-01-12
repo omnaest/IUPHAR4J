@@ -24,157 +24,162 @@ import org.apache.commons.lang.StringUtils;
 
 public class InteractionShort
 {
-	private Long		targetId;
-	private Long		ligandAsTargetId;
-	private String		targetSpecies;
-	private Boolean		primaryTarget;
-	private Long		ligandId;
-	private String		ligandContext;
-	private String		type;
-	private String		action;
-	private String		affinity;
-	private String		affinityType;
-	private List<Long>	refIds;
-	private List<Long>	dataPointInteractionIds;
+    private Long       targetId;
+    private Long       ligandAsTargetId;
+    private String     targetSpecies;
+    private Boolean    primaryTarget;
+    private Long       ligandId;
+    private String     ligandContext;
+    private String     type;
+    private String     action;
+    private String     affinity;
+    private String     affinityType;
+    private List<Long> refIds;
+    private List<Long> dataPointInteractionIds;
 
-	public Long getTargetId()
-	{
-		return this.targetId;
-	}
+    public Long getTargetId()
+    {
+        return this.targetId;
+    }
 
-	public void setTargetId(Long targetId)
-	{
-		this.targetId = targetId;
-	}
+    public void setTargetId(Long targetId)
+    {
+        this.targetId = targetId;
+    }
 
-	public Long getLigandAsTargetId()
-	{
-		return this.ligandAsTargetId;
-	}
+    public Long getLigandAsTargetId()
+    {
+        return this.ligandAsTargetId;
+    }
 
-	public void setLigandAsTargetId(Long ligandAsTargetId)
-	{
-		this.ligandAsTargetId = ligandAsTargetId;
-	}
+    public void setLigandAsTargetId(Long ligandAsTargetId)
+    {
+        this.ligandAsTargetId = ligandAsTargetId;
+    }
 
-	public String getTargetSpecies()
-	{
-		return this.targetSpecies;
-	}
+    public String getTargetSpecies()
+    {
+        return this.targetSpecies;
+    }
 
-	public void setTargetSpecies(String targetSpecies)
-	{
-		this.targetSpecies = targetSpecies;
-	}
+    public void setTargetSpecies(String targetSpecies)
+    {
+        this.targetSpecies = targetSpecies;
+    }
 
-	public Boolean getPrimaryTarget()
-	{
-		return this.primaryTarget;
-	}
+    public Boolean getPrimaryTarget()
+    {
+        return this.primaryTarget;
+    }
 
-	public void setPrimaryTarget(Boolean primaryTarget)
-	{
-		this.primaryTarget = primaryTarget;
-	}
+    public void setPrimaryTarget(Boolean primaryTarget)
+    {
+        this.primaryTarget = primaryTarget;
+    }
 
-	public Long getLigandId()
-	{
-		return this.ligandId;
-	}
+    public Long getLigandId()
+    {
+        return this.ligandId;
+    }
 
-	public void setLigandId(Long ligandId)
-	{
-		this.ligandId = ligandId;
-	}
+    public void setLigandId(Long ligandId)
+    {
+        this.ligandId = ligandId;
+    }
 
-	public String getLigandContext()
-	{
-		return this.ligandContext;
-	}
+    public String getLigandContext()
+    {
+        return this.ligandContext;
+    }
 
-	public void setLigandContext(String ligandContext)
-	{
-		this.ligandContext = ligandContext;
-	}
+    public void setLigandContext(String ligandContext)
+    {
+        this.ligandContext = ligandContext;
+    }
 
-	public String getType()
-	{
-		return this.type;
-	}
+    public String getType()
+    {
+        return this.type;
+    }
 
-	public void setType(String type)
-	{
-		this.type = type;
-	}
+    public ActionType getTypeAsEnum()
+    {
+        return ActionType.matching(this.type);
+    }
 
-	public String getAction()
-	{
-		return this.action;
-	}
+    public void setType(String type)
+    {
+        this.type = type;
+    }
 
-	public void setAction(String action)
-	{
-		this.action = action;
-	}
+    public String getAction()
+    {
+        return this.action;
+    }
 
-	public String getAffinity()
-	{
-		return this.affinity;
-	}
+    public void setAction(String action)
+    {
+        this.action = action;
+    }
 
-	public void setAffinity(String affinity)
-	{
-		this.affinity = affinity;
-	}
+    public String getAffinity()
+    {
+        return this.affinity;
+    }
 
-	public String getAffinityType()
-	{
-		return this.affinityType;
-	}
+    public void setAffinity(String affinity)
+    {
+        this.affinity = affinity;
+    }
 
-	public void setAffinityType(String affinityType)
-	{
-		this.affinityType = affinityType;
-	}
+    public String getAffinityType()
+    {
+        return this.affinityType;
+    }
 
-	public List<Long> getRefIds()
-	{
-		return this.refIds;
-	}
+    public void setAffinityType(String affinityType)
+    {
+        this.affinityType = affinityType;
+    }
 
-	public void setRefIds(List<Long> refIds)
-	{
-		this.refIds = refIds;
-	}
+    public List<Long> getRefIds()
+    {
+        return this.refIds;
+    }
 
-	public List<Long> getDataPointInteractionIds()
-	{
-		return this.dataPointInteractionIds;
-	}
+    public void setRefIds(List<Long> refIds)
+    {
+        this.refIds = refIds;
+    }
 
-	public void setDataPointInteractionIds(List<Long> dataPointInteractionIds)
-	{
-		this.dataPointInteractionIds = dataPointInteractionIds;
-	}
+    public List<Long> getDataPointInteractionIds()
+    {
+        return this.dataPointInteractionIds;
+    }
 
-	public static enum TargetSpecies
-	{
-		Human
-	}
+    public void setDataPointInteractionIds(List<Long> dataPointInteractionIds)
+    {
+        this.dataPointInteractionIds = dataPointInteractionIds;
+    }
 
-	public boolean hasTargetSpecies(TargetSpecies targetSpecies)
-	{
-		return StringUtils.equalsIgnoreCase(this.targetSpecies, targetSpecies.name());
-	}
+    public static enum TargetSpecies
+    {
+        Human
+    }
 
-	public static enum Type
-	{
-		Agonist, Antagonist
-	}
+    public boolean hasTargetSpecies(TargetSpecies targetSpecies)
+    {
+        return StringUtils.equalsIgnoreCase(this.targetSpecies, targetSpecies.name());
+    }
 
-	public boolean isType(Type type)
-	{
-		return StringUtils.equalsIgnoreCase(type.name(), this.type);
-	}
+    public static enum Type
+    {
+        Agonist, Antagonist
+    }
+
+    public boolean isType(Type type)
+    {
+        return StringUtils.equalsIgnoreCase(type.name(), this.type);
+    }
 
 }

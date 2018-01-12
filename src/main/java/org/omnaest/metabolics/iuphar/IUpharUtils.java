@@ -20,6 +20,7 @@ package org.omnaest.metabolics.iuphar;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -30,14 +31,22 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.omnaest.metabolics.iuphar.IUpharRESTUtils.IUpharRestAccessor;
-import org.omnaest.metabolics.iuphar.domain.InteractionAccessor;
+import org.omnaest.metabolics.iuphar.domain.InteractionPropertiesAccessor;
+import org.omnaest.metabolics.iuphar.domain.LigandAccessor;
+import org.omnaest.metabolics.iuphar.domain.LigandInteractionAccessor;
+import org.omnaest.metabolics.iuphar.domain.TargetAccessor;
+import org.omnaest.metabolics.iuphar.domain.TargetInteractionAccessor;
+import org.omnaest.metabolics.iuphar.domain.raw.ActionType;
+import org.omnaest.metabolics.iuphar.domain.raw.Comments;
 import org.omnaest.metabolics.iuphar.domain.raw.DatabaseLink;
 import org.omnaest.metabolics.iuphar.domain.raw.DatabaseLink.Database;
 import org.omnaest.metabolics.iuphar.domain.raw.DatabaseLinks;
 import org.omnaest.metabolics.iuphar.domain.raw.GeneProteinInformation;
 import org.omnaest.metabolics.iuphar.domain.raw.GeneProteinInformations;
+import org.omnaest.metabolics.iuphar.domain.raw.InteractionShort;
 import org.omnaest.metabolics.iuphar.domain.raw.InteractionsShort;
 import org.omnaest.metabolics.iuphar.domain.raw.Ligand;
+import org.omnaest.metabolics.iuphar.domain.raw.LigandType;
 import org.omnaest.metabolics.iuphar.domain.raw.Ligands;
 import org.omnaest.metabolics.iuphar.domain.raw.SpeciesType;
 import org.omnaest.metabolics.iuphar.domain.raw.Synonyms;
@@ -45,17 +54,18 @@ import org.omnaest.metabolics.iuphar.domain.raw.Target;
 import org.omnaest.metabolics.iuphar.domain.raw.Targets;
 import org.omnaest.metabolics.iuphar.utils.IdAndFutureValue;
 import org.omnaest.metabolics.iuphar.utils.JSONHelper;
+import org.omnaest.metabolics.iuphar.wrapper.IUpharModelManager;
+import org.omnaest.metabolics.iuphar.wrapper.IUpharModelManagerLoader;
 import org.omnaest.metabolics.iuphar.wrapper.InteractionsWithLigandsManager;
 import org.omnaest.metabolics.iuphar.wrapper.InteractionsWithTargetsManager;
 import org.omnaest.metabolics.iuphar.wrapper.LigandManager;
-import org.omnaest.metabolics.iuphar.wrapper.IUpharModelManager;
-import org.omnaest.metabolics.iuphar.wrapper.IUpharModelManagerLoader;
 import org.omnaest.metabolics.iuphar.wrapper.TargetManager;
 import org.omnaest.metabolics.iuphar.wrapper.domain.IUpharModel;
 import org.omnaest.metabolics.iuphar.wrapper.domain.InteractionWithLigand;
 import org.omnaest.metabolics.iuphar.wrapper.domain.InteractionWithTarget;
 import org.omnaest.metabolics.iuphar.wrapper.domain.InteractionsWithLigands;
 import org.omnaest.metabolics.iuphar.wrapper.domain.InteractionsWithTargets;
+import org.omnaest.utils.NumberUtils;
 import org.omnaest.utils.cache.Cache;
 import org.omnaest.utils.cache.JsonFolderFilesCache;
 import org.omnaest.utils.rest.client.RestClient.Proxy;
@@ -68,6 +78,49 @@ public class IUpharUtils
 
     private static class IUpharModelManagerImpl implements IUpharModelManagerLoader, IUpharModelManager
     {
+        private static class InteractionPropertiesAccessorImpl implements InteractionPropertiesAccessor
+        {
+            private final InteractionShort interaction;
+
+            private InteractionPropertiesAccessorImpl(InteractionShort interaction)
+            {
+                this.interaction = interaction;
+            }
+
+            @Override
+            public String getAffinity()
+            {
+                return this.interaction.getAffinity();
+            }
+
+            @Override
+            public String getAffinityType()
+            {
+                return this.interaction.getAffinityType();
+            }
+
+            @Override
+            public ActionType getActionType()
+            {
+                return this.interaction.getTypeAsEnum();
+            }
+
+            @Override
+            public Double getAffinityPKi()
+            {
+                Double retval = null;
+
+                if (StringUtils.isNotBlank(this.getAffinity()) && StringUtils.equalsIgnoreCase(StringUtils.trim(this.getAffinityType()), "pKi"))
+                {
+                    retval = NumberUtils.toDouble(this.getAffinity()
+                                                      .split("-")[0].trim());
+                    retval = retval < 0.0001 ? null : retval;
+                }
+
+                return retval;
+            }
+        }
+
         private IUpharModel        iupharModel;
         private IUpharRestAccessor restAccessor = IUpharRESTUtils.getInstance();
 
@@ -232,59 +285,25 @@ public class IUpharUtils
                         }
 
                         @Override
-                        public Stream<InteractionAccessor> getInteractions()
+                        public Stream<TargetInteractionAccessor> getInteractions()
                         {
                             return interactionsWithTargets.stream()
-                                                          .map(interactionWithTarget -> new InteractionAccessor()
+                                                          .map(interactionWithTarget -> new TargetInteractionAccessor()
                                                           {
-                                                              private long targetId = interactionWithTarget.getTarget()
-                                                                                                           .getTargetId();
-
                                                               @Override
-                                                              public String getName()
+                                                              public TargetAccessor getTarget()
                                                               {
-                                                                  return interactionWithTarget.getTarget()
-                                                                                              .getName();
+                                                                  long targetId = interactionWithTarget.getTarget()
+                                                                                                       .getTargetId();
+                                                                  return IUpharModelManagerImpl.this.createTargetAccessor(targetId);
                                                               }
 
                                                               @Override
-                                                              public String getHumanRelatedDatabaseId(Database database)
+                                                              public InteractionPropertiesAccessor getProperties()
                                                               {
-                                                                  return this.getDatabaseId(database, SpeciesType.HUMAN);
+                                                                  return new InteractionPropertiesAccessorImpl(interactionWithTarget.getInteraction());
                                                               }
 
-                                                              @Override
-                                                              public String getDatabaseId(Database database, SpeciesType speciesType)
-                                                              {
-                                                                  return IUpharModelManagerImpl.this.iupharModel.getTargetIdToDatabaseLinksMap()
-                                                                                                                .getOrDefault(this.targetId,
-                                                                                                                              new DatabaseLinks())
-                                                                                                                .stream()
-                                                                                                                .filter(databaseLink -> databaseLink.hasDatabase(database)
-                                                                                                                        && databaseLink.hasSpeciesType(speciesType))
-                                                                                                                .findFirst()
-                                                                                                                .orElse(new DatabaseLink())
-                                                                                                                .getAccession();
-                                                              }
-
-                                                              @Override
-                                                              public String getGene(SpeciesType speciesType)
-                                                              {
-                                                                  return IUpharModelManagerImpl.this.iupharModel.getTargetIdToGeneProteinInformationMap()
-                                                                                                                .getOrDefault(this.targetId,
-                                                                                                                              new GeneProteinInformations())
-                                                                                                                .stream()
-                                                                                                                .filter(geneProteinInfo -> geneProteinInfo.hasSpeciesType(speciesType))
-                                                                                                                .findFirst()
-                                                                                                                .orElse(new GeneProteinInformation())
-                                                                                                                .getGeneSymbol();
-                                                              }
-
-                                                              @Override
-                                                              public String getHumanGene()
-                                                              {
-                                                                  return this.getGene(SpeciesType.HUMAN);
-                                                              }
                                                           });
                         }
 
@@ -296,6 +315,118 @@ public class IUpharUtils
                 {
                     return ligand;
                 }
+            };
+        }
+
+        private LigandAccessor createLigandAccessor(long ligandId)
+        {
+            Ligand ligand = this.iupharModel.getLigandIdToLigand()
+                                            .get(ligandId);
+            return new LigandAccessor()
+            {
+                @Override
+                public String getName()
+                {
+                    return ligand.getName();
+                }
+
+                @Override
+                public String getNameHtmlStripped()
+                {
+                    return this.getName()
+                               .replaceAll("\\<[^\\>]+\\>", "");
+                }
+
+                @Override
+                public String getClinicalUse()
+                {
+                    return IUpharModelManagerImpl.this.iupharModel.getLigandIdToCommentsMap()
+                                                                  .getOrDefault(ligandId, new Comments())
+                                                                  .getClinicalUse();
+                }
+
+                @Override
+                public LigandType getType()
+                {
+                    return ligand.getTypeAsEnum();
+                }
+
+                @Override
+                public boolean hasType(LigandType ligandType)
+                {
+                    return ligandType.equals(this.getType());
+                }
+
+                @Override
+                public Stream<TargetInteractionAccessor> getTargetInteractions()
+                {
+                    return IUpharModelManagerImpl.this.iupharModel.getLigandIdToInteraction()
+                                                                  .get(ligandId)
+                                                                  .stream()
+                                                                  .map(interaction -> IUpharModelManagerImpl.this.createInteractionWithTarget(interaction));
+                }
+            };
+        }
+
+        private TargetAccessor createTargetAccessor(long targetId)
+        {
+            Target target = IUpharModelManagerImpl.this.iupharModel.getTargetIdToTarget()
+                                                                   .get(targetId);
+            return new TargetAccessor()
+            {
+
+                @Override
+                public String getName()
+                {
+                    return target.getName();
+                }
+
+                @Override
+                public String getHumanRelatedDatabaseId(Database database)
+                {
+                    return this.getDatabaseId(database, SpeciesType.HUMAN);
+                }
+
+                @Override
+                public String getDatabaseId(Database database, SpeciesType speciesType)
+                {
+                    return IUpharModelManagerImpl.this.iupharModel.getTargetIdToDatabaseLinksMap()
+                                                                  .getOrDefault(targetId, new DatabaseLinks())
+                                                                  .stream()
+                                                                  .filter(databaseLink -> databaseLink.hasDatabase(database)
+                                                                          && databaseLink.hasSpeciesType(speciesType))
+                                                                  .findFirst()
+                                                                  .orElse(new DatabaseLink())
+                                                                  .getAccession();
+                }
+
+                @Override
+                public String getGene(SpeciesType speciesType)
+                {
+                    return IUpharModelManagerImpl.this.iupharModel.getTargetIdToGeneProteinInformationMap()
+                                                                  .getOrDefault(targetId, new GeneProteinInformations())
+                                                                  .stream()
+                                                                  .filter(geneProteinInfo -> geneProteinInfo.hasSpeciesType(speciesType))
+                                                                  .findFirst()
+                                                                  .orElse(new GeneProteinInformation())
+                                                                  .getGeneSymbol();
+                }
+
+                @Override
+                public String getHumanGene()
+                {
+                    return this.getGene(SpeciesType.HUMAN);
+                }
+
+                @Override
+                public Stream<LigandInteractionAccessor> getLigandInteractions()
+                {
+                    return IUpharModelManagerImpl.this.iupharModel.getTargetIdToInteraction()
+                                                                  .getOrDefault(targetId, Collections.emptyList())
+                                                                  .stream()
+                                                                  .map(interaction -> IUpharModelManagerImpl.this.createInteractionWithLigand(interaction));
+                }
+
             };
         }
 
@@ -319,11 +450,11 @@ public class IUpharUtils
         }
 
         @Override
-        public LigandManager findLigandForMetabolite(String metabolite)
+        public LigandManager findLigandForMetaboliteOld(String metabolite)
         {
             return this.createLigandManager(this.iupharModel.getLigands()
                                                             .stream()
-                                                            .filter(ligand -> ligand.hasType(Ligand.Type.Metabolite))
+                                                            .filter(ligand -> ligand.hasType(LigandType.METABOLITE))
                                                             .filter(ligand -> StringUtils.equalsIgnoreCase(ligand.getName(), metabolite)
                                                                     || this.iupharModel.getLigandIdToSynonymsMap()
                                                                                        .getOrDefault(ligand.getLigandId(), new Synonyms())
@@ -332,6 +463,104 @@ public class IUpharUtils
                                                                                                                                          metabolite)))
                                                             .findFirst()
                                                             .orElseGet(() -> null));
+        }
+
+        @Override
+        public Stream<LigandAccessor> findLigandForMetabolite(String metabolite)
+        {
+            return this.iupharModel.getLigands()
+                                   .stream()
+                                   .filter(ligand -> ligand.hasType(LigandType.METABOLITE))
+                                   .filter(ligand -> StringUtils.equalsIgnoreCase(ligand.getName(), metabolite) || this.iupharModel.getLigandIdToSynonymsMap()
+                                                                                                                                   .getOrDefault(ligand.getLigandId(),
+                                                                                                                                                 new Synonyms())
+                                                                                                                                   .stream()
+                                                                                                                                   .anyMatch(synonym -> StringUtils.equalsIgnoreCase(synonym.getName(),
+                                                                                                                                                                                     metabolite)))
+                                   .map(ligand -> new LigandAccessor()
+                                   {
+                                       @Override
+                                       public Stream<TargetInteractionAccessor> getTargetInteractions()
+                                       {
+                                           return IUpharModelManagerImpl.this.iupharModel.getLigandIdToInteraction()
+                                                                                         .get(ligand.getLigandId())
+                                                                                         .stream()
+                                                                                         .map(interaction -> IUpharModelManagerImpl.this.createInteractionWithTarget(interaction));
+                                       }
+
+                                       @Override
+                                       public String getName()
+                                       {
+                                           return ligand.getName();
+                                       }
+
+                                       @Override
+                                       public String getNameHtmlStripped()
+                                       {
+                                           return this.getName()
+                                                      .replaceAll("\\<[^\\>]+\\>", "");
+                                       }
+
+                                       @Override
+                                       public String getClinicalUse()
+                                       {
+                                           return IUpharModelManagerImpl.this.iupharModel.getLigandIdToCommentsMap()
+                                                                                         .get(ligand.getLigandId())
+                                                                                         .getClinicalUse();
+                                       }
+
+                                       @Override
+                                       public LigandType getType()
+                                       {
+                                           return ligand.getTypeAsEnum();
+                                       }
+
+                                       @Override
+                                       public boolean hasType(LigandType ligandType)
+                                       {
+                                           return ligandType.equals(this.getType());
+                                       }
+                                   });
+        }
+
+        private TargetInteractionAccessor createInteractionWithTarget(InteractionShort interaction)
+        {
+            Long targetId = interaction.getTargetId();
+
+            return new TargetInteractionAccessor()
+            {
+                @Override
+                public TargetAccessor getTarget()
+                {
+                    return IUpharModelManagerImpl.this.createTargetAccessor(targetId);
+                }
+
+                @Override
+                public InteractionPropertiesAccessor getProperties()
+                {
+                    return new InteractionPropertiesAccessorImpl(interaction);
+                }
+
+            };
+        }
+
+        private LigandInteractionAccessor createInteractionWithLigand(InteractionShort interaction)
+        {
+            Long ligandId = interaction.getLigandId();
+            return new LigandInteractionAccessor()
+            {
+                @Override
+                public InteractionPropertiesAccessor getProperties()
+                {
+                    return new InteractionPropertiesAccessorImpl(interaction);
+                }
+
+                @Override
+                public LigandAccessor getLigand()
+                {
+                    return IUpharModelManagerImpl.this.createLigandAccessor(ligandId);
+                }
+            };
         }
 
         @Override

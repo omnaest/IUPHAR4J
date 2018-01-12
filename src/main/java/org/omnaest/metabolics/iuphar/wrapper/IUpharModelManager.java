@@ -20,6 +20,9 @@ package org.omnaest.metabolics.iuphar.wrapper;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.stream.Stream;
+
+import org.omnaest.metabolics.iuphar.domain.LigandAccessor;
 
 public interface IUpharModelManager
 {
@@ -30,8 +33,10 @@ public interface IUpharModelManager
 
     LigandManager findLigand(long ligandId);
 
-    LigandManager findLigandForMetabolite(String metabolite);
+    LigandManager findLigandForMetaboliteOld(String metabolite);
 
     TargetManager findTargetByName(String targetName);
+
+    Stream<LigandAccessor> findLigandForMetabolite(String metabolite);
 
 }

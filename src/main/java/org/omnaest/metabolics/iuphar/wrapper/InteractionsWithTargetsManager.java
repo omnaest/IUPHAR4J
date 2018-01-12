@@ -20,12 +20,12 @@ package org.omnaest.metabolics.iuphar.wrapper;
 
 import java.util.stream.Stream;
 
-import org.omnaest.metabolics.iuphar.domain.InteractionAccessor;
+import org.omnaest.metabolics.iuphar.domain.TargetInteractionAccessor;
 import org.omnaest.metabolics.iuphar.wrapper.domain.InteractionsWithTargets;
 
 public interface InteractionsWithTargetsManager
 {
     InteractionsWithTargets get();
 
-    public Stream<InteractionAccessor> getInteractions();
+    public Stream<TargetInteractionAccessor> getInteractions();
 }
