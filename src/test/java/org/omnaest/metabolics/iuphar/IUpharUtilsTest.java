@@ -19,14 +19,13 @@
 package org.omnaest.metabolics.iuphar;
 
 import java.io.File;
-import java.util.function.Consumer;
 
 import org.junit.Ignore;
 import org.junit.Test;
+import org.omnaest.metabolics.iuphar.domain.IUpharModelManager;
+import org.omnaest.metabolics.iuphar.domain.IUpharModelManagerLoader;
 import org.omnaest.metabolics.iuphar.domain.TargetAccessor;
 import org.omnaest.metabolics.iuphar.domain.raw.DatabaseLink.Database;
-import org.omnaest.metabolics.iuphar.wrapper.IUpharModelManager;
-import org.omnaest.metabolics.iuphar.wrapper.IUpharModelManagerLoader;
 
 public class IUpharUtilsTest
 {
@@ -98,29 +97,29 @@ public class IUpharUtilsTest
 
     }
 
-    private Consumer<? super String> listTargetAndItsLigands(IUpharModelManager modelManager)
-    {
-        return targetName ->
-        {
-            System.out.println(targetName);
-
-            modelManager.findTargetByName(targetName)
-                        .findLigands()
-                        .get()
-                        .stream()
-                        .sorted((i1, i2) -> i1.getInteraction()
-                                              .getAffinity()
-                                              .compareTo(i2.getInteraction()
-                                                           .getAffinity()))
-                        .forEach(interactionWithLigand -> System.out.println("  <-" + interactionWithLigand.getLigand()
-                                                                                                           .getName()
-                                + "(" + interactionWithLigand.getInteraction()
-                                                             .getAffinity()
-                                + " " + interactionWithLigand.getInteraction()
-                                                             .getAffinityType()
-                                + ")"));
-
-        };
-    }
+    //    private Consumer<? super String> listTargetAndItsLigands(IUpharModelManager modelManager)
+    //    {
+    //        return targetName ->
+    //        {
+    //            System.out.println(targetName);
+    //
+    //            modelManager.findTargetByName(targetName)
+    //                        .findLigands()
+    //                        .get()
+    //                        .stream()
+    //                        .sorted((i1, i2) -> i1.getInteraction()
+    //                                              .getAffinity()
+    //                                              .compareTo(i2.getInteraction()
+    //                                                           .getAffinity()))
+    //                        .forEach(interactionWithLigand -> System.out.println("  <-" + interactionWithLigand.getLigand()
+    //                                                                                                           .getName()
+    //                                + "(" + interactionWithLigand.getInteraction()
+    //                                                             .getAffinity()
+    //                                + " " + interactionWithLigand.getInteraction()
+    //                                                             .getAffinityType()
+    //                                + ")"));
+    //
+    //        };
+    //    }
 
 }

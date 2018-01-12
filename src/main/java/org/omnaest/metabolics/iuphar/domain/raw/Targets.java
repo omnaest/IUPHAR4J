@@ -21,25 +21,25 @@ package org.omnaest.metabolics.iuphar.domain.raw;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.omnaest.metabolics.iuphar.utils.JSONHelper;
+import org.omnaest.utils.JSONHelper;
 
 public class Targets extends ArrayList<Target>
 {
-	private static final long serialVersionUID = 4029533051260191930L;
+    private static final long serialVersionUID = 4029533051260191930L;
 
-	public Targets(List<Target> targets)
-	{
-		this.addAll(targets);
-	}
+    public Targets(List<Target> targets)
+    {
+        this.addAll(targets);
+    }
 
-	public Targets()
-	{
-		super();
-	}
+    public Targets()
+    {
+        super();
+    }
 
-	@Override
-	public String toString()
-	{
-		return JSONHelper.prettyPrint(this);
-	}
+    @Override
+    public String toString()
+    {
+        return JSONHelper.prettyPrint(this);
+    }
 }

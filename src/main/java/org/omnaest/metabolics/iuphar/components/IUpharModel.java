@@ -16,7 +16,7 @@
 
 
 */
-package org.omnaest.metabolics.iuphar.wrapper.domain;
+package org.omnaest.metabolics.iuphar.components;
 
 import java.util.List;
 import java.util.Map;
@@ -34,7 +34,7 @@ import org.omnaest.metabolics.iuphar.domain.raw.Ligands;
 import org.omnaest.metabolics.iuphar.domain.raw.Synonyms;
 import org.omnaest.metabolics.iuphar.domain.raw.Target;
 import org.omnaest.metabolics.iuphar.domain.raw.Targets;
-import org.omnaest.metabolics.iuphar.utils.JSONHelper;
+import org.omnaest.utils.JSONHelper;
 import org.omnaest.utils.element.cached.CachedElement;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

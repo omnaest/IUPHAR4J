@@ -28,9 +28,11 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.omnaest.metabolics.iuphar.IUpharRESTUtils.IUpharRestAccessor;
+import org.omnaest.metabolics.iuphar.components.IUpharModel;
+import org.omnaest.metabolics.iuphar.domain.IUpharModelManager;
+import org.omnaest.metabolics.iuphar.domain.IUpharModelManagerLoader;
 import org.omnaest.metabolics.iuphar.domain.InteractionPropertiesAccessor;
 import org.omnaest.metabolics.iuphar.domain.LigandAccessor;
 import org.omnaest.metabolics.iuphar.domain.LigandInteractionAccessor;
@@ -53,18 +55,7 @@ import org.omnaest.metabolics.iuphar.domain.raw.Synonyms;
 import org.omnaest.metabolics.iuphar.domain.raw.Target;
 import org.omnaest.metabolics.iuphar.domain.raw.Targets;
 import org.omnaest.metabolics.iuphar.utils.IdAndFutureValue;
-import org.omnaest.metabolics.iuphar.utils.JSONHelper;
-import org.omnaest.metabolics.iuphar.wrapper.IUpharModelManager;
-import org.omnaest.metabolics.iuphar.wrapper.IUpharModelManagerLoader;
-import org.omnaest.metabolics.iuphar.wrapper.InteractionsWithLigandsManager;
-import org.omnaest.metabolics.iuphar.wrapper.InteractionsWithTargetsManager;
-import org.omnaest.metabolics.iuphar.wrapper.LigandManager;
-import org.omnaest.metabolics.iuphar.wrapper.TargetManager;
-import org.omnaest.metabolics.iuphar.wrapper.domain.IUpharModel;
-import org.omnaest.metabolics.iuphar.wrapper.domain.InteractionWithLigand;
-import org.omnaest.metabolics.iuphar.wrapper.domain.InteractionWithTarget;
-import org.omnaest.metabolics.iuphar.wrapper.domain.InteractionsWithLigands;
-import org.omnaest.metabolics.iuphar.wrapper.domain.InteractionsWithTargets;
+import org.omnaest.utils.JSONHelper;
 import org.omnaest.utils.NumberUtils;
 import org.omnaest.utils.cache.Cache;
 import org.omnaest.utils.cache.JsonFolderFilesCache;
@@ -78,6 +69,9 @@ public class IUpharUtils
 
     private static class IUpharModelManagerImpl implements IUpharModelManagerLoader, IUpharModelManager
     {
+        private IUpharModel        iupharModel;
+        private IUpharRestAccessor restAccessor = IUpharRESTUtils.getInstance();
+
         private static class InteractionPropertiesAccessorImpl implements InteractionPropertiesAccessor
         {
             private final InteractionShort interaction;
@@ -121,25 +115,22 @@ public class IUpharUtils
             }
         }
 
-        private IUpharModel        iupharModel;
-        private IUpharRestAccessor restAccessor = IUpharRESTUtils.getInstance();
-
         @Override
-        public IUpharModelManagerImpl usingProxy(Proxy proxy)
+        public IUpharModelManagerLoader usingProxy(Proxy proxy)
         {
             this.restAccessor.withProxy(proxy);
             return this;
         }
 
         @Override
-        public IUpharModelManagerImpl usingCache(Cache cache)
+        public IUpharModelManagerLoader usingCache(Cache cache)
         {
             this.restAccessor.usingCache(cache);
             return this;
         }
 
         @Override
-        public IUpharModelManagerImpl usingLocalCache()
+        public IUpharModelManagerLoader usingLocalCache()
         {
             return this.usingCache(new JsonFolderFilesCache(new File("cache/iuphar")));
         }
@@ -246,76 +237,15 @@ public class IUpharUtils
         }
 
         @Override
-        public LigandManager findLigand(String name)
+        public LigandAccessor findLigandByName(String name)
         {
-            return this.createLigandManager(this.iupharModel.getLigands()
-                                                            .stream()
-                                                            .filter(ligand -> StringUtils.equalsIgnoreCase(ligand.getName(), name))
-                                                            .findFirst()
-                                                            .get());
-        }
-
-        private LigandManager createLigandManager(Ligand ligand)
-        {
-            return new LigandManager()
-            {
-                @Override
-                public InteractionsWithTargetsManager findTargets()
-                {
-                    InteractionsWithTargets interactionsWithTargets = new InteractionsWithTargets(IUpharModelManagerImpl.this.iupharModel.getInteractions()
-                                                                                                                                         .stream()
-                                                                                                                                         .filter(interaction -> ligand != null)
-                                                                                                                                         .filter(interaction -> ObjectUtils.equals(interaction.getLigandId(),
-                                                                                                                                                                                   ligand.getLigandId()))
-                                                                                                                                         .map(interaction -> new InteractionWithTarget(interaction,
-                                                                                                                                                                                       IUpharModelManagerImpl.this.findTarget(interaction.getTargetId())))
-                                                                                                                                         .collect(Collectors.toList()));
-
-                    return this.createInteractionsWithTargetsManager(interactionsWithTargets);
-                }
-
-                private InteractionsWithTargetsManager createInteractionsWithTargetsManager(InteractionsWithTargets interactionsWithTargets)
-                {
-                    return new InteractionsWithTargetsManager()
-                    {
-                        @Override
-                        public InteractionsWithTargets get()
-                        {
-                            return interactionsWithTargets;
-                        }
-
-                        @Override
-                        public Stream<TargetInteractionAccessor> getInteractions()
-                        {
-                            return interactionsWithTargets.stream()
-                                                          .map(interactionWithTarget -> new TargetInteractionAccessor()
-                                                          {
-                                                              @Override
-                                                              public TargetAccessor getTarget()
-                                                              {
-                                                                  long targetId = interactionWithTarget.getTarget()
-                                                                                                       .getTargetId();
-                                                                  return IUpharModelManagerImpl.this.createTargetAccessor(targetId);
-                                                              }
-
-                                                              @Override
-                                                              public InteractionPropertiesAccessor getProperties()
-                                                              {
-                                                                  return new InteractionPropertiesAccessorImpl(interactionWithTarget.getInteraction());
-                                                              }
-
-                                                          });
-                        }
-
-                    };
-                }
-
-                @Override
-                public Ligand get()
-                {
-                    return ligand;
-                }
-            };
+            Long ligandId = this.iupharModel.getLigands()
+                                            .stream()
+                                            .filter(ligand -> StringUtils.equalsIgnoreCase(ligand.getName(), name))
+                                            .findFirst()
+                                            .get()
+                                            .getLigandId();
+            return this.findLigand(ligandId);
         }
 
         private LigandAccessor createLigandAccessor(long ligandId)
@@ -335,6 +265,12 @@ public class IUpharUtils
                 {
                     return this.getName()
                                .replaceAll("\\<[^\\>]+\\>", "");
+                }
+
+                @Override
+                public long getLigandId()
+                {
+                    return ligandId;
                 }
 
                 @Override
@@ -430,39 +366,10 @@ public class IUpharUtils
             };
         }
 
-        private Target findTarget(long targetId)
-        {
-            return this.iupharModel.getTargets()
-                                   .stream()
-                                   .filter(target -> ObjectUtils.equals(targetId, target.getTargetId()))
-                                   .findFirst()
-                                   .get();
-        }
-
         @Override
-        public LigandManager findLigand(long ligandId)
+        public LigandAccessor findLigand(long ligandId)
         {
-            return this.createLigandManager(this.iupharModel.getLigands()
-                                                            .stream()
-                                                            .filter(ligand -> ObjectUtils.equals(ligand.getLigandId(), ligandId))
-                                                            .findFirst()
-                                                            .get());
-        }
-
-        @Override
-        public LigandManager findLigandForMetaboliteOld(String metabolite)
-        {
-            return this.createLigandManager(this.iupharModel.getLigands()
-                                                            .stream()
-                                                            .filter(ligand -> ligand.hasType(LigandType.METABOLITE))
-                                                            .filter(ligand -> StringUtils.equalsIgnoreCase(ligand.getName(), metabolite)
-                                                                    || this.iupharModel.getLigandIdToSynonymsMap()
-                                                                                       .getOrDefault(ligand.getLigandId(), new Synonyms())
-                                                                                       .stream()
-                                                                                       .anyMatch(synonym -> StringUtils.equalsIgnoreCase(synonym.getName(),
-                                                                                                                                         metabolite)))
-                                                            .findFirst()
-                                                            .orElseGet(() -> null));
+            return this.createLigandAccessor(ligandId);
         }
 
         @Override
@@ -520,6 +427,13 @@ public class IUpharUtils
                                        {
                                            return ligandType.equals(this.getType());
                                        }
+
+                                       @Override
+                                       public long getLigandId()
+                                       {
+                                           return ligand.getLigandId();
+                                       }
+
                                    });
         }
 
@@ -564,51 +478,25 @@ public class IUpharUtils
         }
 
         @Override
-        public TargetManager findTargetByName(String name)
+        public TargetAccessor findTargetByName2(String name)
         {
-            return this.createTargetManager(this.iupharModel.getTargets()
-                                                            .stream()
-                                                            .filter(target -> StringUtils.equalsIgnoreCase(target.getName(), name)
-                                                                    || this.iupharModel.getTargetIdToSynonymsMap()
-                                                                                       .getOrDefault(target.getTargetId(), new Synonyms())
-                                                                                       .stream()
-                                                                                       .anyMatch(synonym -> StringUtils.equalsIgnoreCase(synonym.getName(),
-                                                                                                                                         name)))
-                                                            .findFirst()
-                                                            .get());
+            Long targetId = this.iupharModel.getTargets()
+                                            .stream()
+                                            .filter(target -> StringUtils.equalsIgnoreCase(target.getName(), name)
+                                                    || this.iupharModel.getTargetIdToSynonymsMap()
+                                                                       .getOrDefault(target.getTargetId(), new Synonyms())
+                                                                       .stream()
+                                                                       .anyMatch(synonym -> StringUtils.equalsIgnoreCase(synonym.getName(), name)))
+                                            .findFirst()
+                                            .get()
+                                            .getTargetId();
+            return this.findTarget2(targetId);
         }
 
-        private TargetManager createTargetManager(Target target)
+        @Override
+        public TargetAccessor findTarget2(long targetId)
         {
-            return new TargetManager()
-            {
-                @Override
-                public InteractionsWithLigandsManager findLigands()
-                {
-                    return this.createInteractionsWithLigandsManager(new InteractionsWithLigands(IUpharModelManagerImpl.this.iupharModel.getInteractions()
-                                                                                                                                        .stream()
-                                                                                                                                        .filter(interaction -> ObjectUtils.equals(interaction.getTargetId(),
-                                                                                                                                                                                  target.getTargetId()))
-                                                                                                                                        .map(interaction -> new InteractionWithLigand(interaction,
-                                                                                                                                                                                      IUpharModelManagerImpl.this.findLigand(interaction.getLigandId())
-                                                                                                                                                                                                                 .get(),
-                                                                                                                                                                                      IUpharModelManagerImpl.this.iupharModel.getLigandIdToCommentsMap()
-                                                                                                                                                                                                                             .get(interaction.getLigandId())))
-                                                                                                                                        .collect(Collectors.toList())));
-                }
-
-                private InteractionsWithLigandsManager createInteractionsWithLigandsManager(InteractionsWithLigands interactionsWithLigands)
-                {
-                    return new InteractionsWithLigandsManager()
-                    {
-                        @Override
-                        public InteractionsWithLigands get()
-                        {
-                            return interactionsWithLigands;
-                        }
-                    };
-                }
-            };
+            return this.createTargetAccessor(targetId);
         }
 
     }

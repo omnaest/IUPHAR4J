@@ -16,7 +16,7 @@
 
 
 */
-package org.omnaest.metabolics.iuphar.wrapper;
+package org.omnaest.metabolics.iuphar.domain;
 
 import java.io.File;
 import java.io.IOException;

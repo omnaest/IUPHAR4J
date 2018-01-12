@@ -18,4 +18,6 @@ public interface LigandAccessor
 
     public String getClinicalUse();
 
+    public long getLigandId();
+
 }
