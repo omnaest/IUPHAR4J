@@ -44,26 +44,6 @@ public class IUpharUtilsTest
 
     }
 
-    //    @Test
-    //    @Ignore
-    //    public void testGetInstanceFromFile() throws Exception
-    //    {
-    //        IUpharModelManager modelManager = IUpharUtils.getInstance()
-    //                                                     .loadFromFile(this.file);
-    //        //		System.out.println(modelManager	.findLigand("olanzapine")
-    //        //										.findTargets()
-    //        //										.get());
-    //
-    //        modelManager.findLigandForMetaboliteOld("histamine")
-    //                    .findTargets()
-    //                    .get()
-    //                    .stream()
-    //                    .map(interactionWithTarget -> interactionWithTarget.getTarget()
-    //                                                                       .getName())
-    //                    .forEach(this.listTargetAndItsLigands(modelManager));
-    //
-    //    }
-
     @Test
     @Ignore
     public void testGetInstanceFromFile2() throws Exception
@@ -96,30 +76,5 @@ public class IUpharUtilsTest
                     });
 
     }
-
-    //    private Consumer<? super String> listTargetAndItsLigands(IUpharModelManager modelManager)
-    //    {
-    //        return targetName ->
-    //        {
-    //            System.out.println(targetName);
-    //
-    //            modelManager.findTargetByName(targetName)
-    //                        .findLigands()
-    //                        .get()
-    //                        .stream()
-    //                        .sorted((i1, i2) -> i1.getInteraction()
-    //                                              .getAffinity()
-    //                                              .compareTo(i2.getInteraction()
-    //                                                           .getAffinity()))
-    //                        .forEach(interactionWithLigand -> System.out.println("  <-" + interactionWithLigand.getLigand()
-    //                                                                                                           .getName()
-    //                                + "(" + interactionWithLigand.getInteraction()
-    //                                                             .getAffinity()
-    //                                + " " + interactionWithLigand.getInteraction()
-    //                                                             .getAffinityType()
-    //                                + ")"));
-    //
-    //        };
-    //    }
 
 }
