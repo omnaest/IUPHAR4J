@@ -29,6 +29,8 @@ public interface IUpharModelManager
 
     Stream<LigandAccessor> findLigandForMetabolite(String metabolite);
 
+    Stream<LigandAccessor> findLigandForDrug(String metabolite);
+
     LigandAccessor findLigand(long ligandId);
 
     LigandAccessor findLigandByName(String name);

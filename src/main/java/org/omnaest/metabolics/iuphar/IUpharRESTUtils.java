@@ -29,9 +29,9 @@ import org.omnaest.metabolics.iuphar.domain.raw.Ligands;
 import org.omnaest.metabolics.iuphar.domain.raw.Synonyms;
 import org.omnaest.metabolics.iuphar.domain.raw.Targets;
 import org.omnaest.utils.cache.Cache;
-import org.omnaest.utils.rest.client.JSONRestClient;
 import org.omnaest.utils.rest.client.RestClient;
 import org.omnaest.utils.rest.client.RestClient.Proxy;
+import org.omnaest.utils.rest.client.internal.JSONRestClient;
 
 public class IUpharRESTUtils
 {

@@ -35,4 +35,5 @@ public interface IUpharModelManagerLoader
     IUpharModelManager loadFromFile(File file) throws IOException;
 
     IUpharModelManager loadFromRestApi();
+
 }

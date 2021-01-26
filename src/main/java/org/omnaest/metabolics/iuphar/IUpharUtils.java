@@ -58,7 +58,7 @@ import org.omnaest.metabolics.iuphar.utils.IdAndFutureValue;
 import org.omnaest.utils.JSONHelper;
 import org.omnaest.utils.NumberUtils;
 import org.omnaest.utils.cache.Cache;
-import org.omnaest.utils.cache.JsonFolderFilesCache;
+import org.omnaest.utils.cache.internal.JsonFolderFilesCache;
 import org.omnaest.utils.rest.client.RestClient.Proxy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -375,9 +375,20 @@ public class IUpharUtils
         @Override
         public Stream<LigandAccessor> findLigandForMetabolite(String metabolite)
         {
+            return this.findLigandForMetabolite(metabolite, LigandType.METABOLITE);
+        }
+
+        @Override
+        public Stream<LigandAccessor> findLigandForDrug(String metabolite)
+        {
+            return this.findLigandForMetabolite(metabolite, LigandType.SYNTHETIC);
+        }
+
+        public Stream<LigandAccessor> findLigandForMetabolite(String metabolite, LigandType ligandType)
+        {
             return this.iupharModel.getLigands()
                                    .stream()
-                                   .filter(ligand -> ligand.hasType(LigandType.METABOLITE))
+                                   .filter(ligand -> ligand.hasType(ligandType))
                                    .filter(ligand -> StringUtils.equalsIgnoreCase(ligand.getName(), metabolite) || this.iupharModel.getLigandIdToSynonymsMap()
                                                                                                                                    .getOrDefault(ligand.getLigandId(),
                                                                                                                                                  new Synonyms())
@@ -390,7 +401,7 @@ public class IUpharUtils
                                        public Stream<TargetInteractionAccessor> getTargetInteractions()
                                        {
                                            return IUpharModelManagerImpl.this.iupharModel.getLigandIdToInteraction()
-                                                                                         .get(ligand.getLigandId())
+                                                                                         .getOrDefault(ligand.getLigandId(), Collections.emptyList())
                                                                                          .stream()
                                                                                          .map(interaction -> IUpharModelManagerImpl.this.createInteractionWithTarget(interaction));
                                        }
